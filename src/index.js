@@ -88,10 +88,15 @@ export default class LinkTool {
       input: null,
       inputHolder: null,
       linkContent: null,
+      anchor: null,
+      bodyHolder: null,
       linkImage: null,
       linkTitle: null,
       linkDescription: null,
-      linkText: null,
+      textArrow: null,
+      bodyInfo: null,
+      infoWeek: null,
+      infoPrice: null,
     };
 
     this._data = {
@@ -190,12 +195,16 @@ export default class LinkTool {
       inputEl: 'link-tool__input',
       inputHolder: 'link-tool__input-holder',
       inputError: 'link-tool__input-holder--error',
-      linkContent: 'link-tool__content',
-      linkContentRendered: 'link-tool__content--rendered',
-      linkImage: 'link-tool__image',
-      linkTitle: 'link-tool__title',
-      linkDescription: 'link-tool__description',
-      linkText: 'link-tool__anchor',
+      linkContent: 'c-itemCard__item',
+      //linkContentRendered: 'link-tool__content--rendered',
+      linkImage: 'c-itemCard__item__pic',
+      body: 'c-itemCard__item__body',
+      linkTitle: 'c-itemCard__item__body__ttl',
+      linkDescription: 'c-itemCard__item__body__desc',
+      textArrow: 'c-itemCard__item__arrow',
+      bodyInfo: 'c-itemCard__item__body__info',
+      infoWeek: 'c-itemCard__item__body__info__week',
+      infoPrice: 'c-itemCard__item__body__info__price',
       progress: 'link-tool__progress',
       progressLoading: 'link-tool__progress--loading',
       progressLoaded: 'link-tool__progress--loaded',
@@ -300,15 +309,21 @@ export default class LinkTool {
    * @returns {HTMLElement}
    */
   prepareLinkPreview() {
-    const holder = this.make('a', this.CSS.linkContent, {
+    //const holder = this.make('a', this.CSS.linkContent, {
+    //  target: '_blank',
+    //  rel: 'nofollow noindex noreferrer',
+    //});
+    const holder = this.make('div', this.CSS.linkContent);
+    this.nodes.anchor = this.make('a', null, {
       target: '_blank',
       rel: 'nofollow noindex noreferrer',
     });
+    holder.appendChild(this.nodes.anchor);
 
     this.nodes.linkImage = this.make('div', this.CSS.linkImage);
-    this.nodes.linkTitle = this.make('div', this.CSS.linkTitle);
+    this.nodes.linkTitle = this.make('h3', this.CSS.linkTitle);
     this.nodes.linkDescription = this.make('p', this.CSS.linkDescription);
-    this.nodes.linkText = this.make('span', this.CSS.linkText);
+    this.nodes.textArrow = this.make('i', this.CSS.textArrow, { style: 'border-color:#0094CC;' });
 
     return holder;
   }
@@ -322,26 +337,44 @@ export default class LinkTool {
     this.nodes.container.appendChild(this.nodes.linkContent);
 
     if (image && image.url) {
-      this.nodes.linkImage.style.backgroundImage = 'url(' + image.url + ')';
-      this.nodes.linkContent.appendChild(this.nodes.linkImage);
+      const img = this.make('img', null, { src: image.url});
+      this.nodes.linkImage.appendChild(img);
+      //this.nodes.linkImage.style.backgroundImage = 'url(' + image.url + ')';
+      this.nodes.anchor.appendChild(this.nodes.linkImage);
     }
 
+    this.nodes.bodyHolder = this.make('div', this.CSS.body);
     if (title) {
       this.nodes.linkTitle.textContent = title;
-      this.nodes.linkContent.appendChild(this.nodes.linkTitle);
+      this.nodes.bodyHolder.appendChild(this.nodes.linkTitle);
     }
 
     if (description) {
       this.nodes.linkDescription.textContent = description;
-      this.nodes.linkContent.appendChild(this.nodes.linkDescription);
+      this.nodes.bodyHolder.appendChild(this.nodes.linkDescription);
+    }
+    this.nodes.anchor.appendChild(this.nodes.bodyHolder);
+    this.nodes.anchor.appendChild(this.nodes.textArrow);
+
+    //this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
+    this.nodes.anchor.setAttribute('href', this.data.link);
+
+    //TODO if week and price
+    if (true) {
+      this.nodes.bodyInfo = this.make('div', this.CSS.bodyInfo);
+      this.nodes.infoWeek = this.make('p', this.CSS.infoWeek);
+      this.nodes.infoPrice = this.make('p', this.CSS.infoPrice, { style: 'color:#0094CC'});
+
+      this.nodes.infoWeek.textContent = '開催日:月,火,水,木,金,土';
+      this.nodes.infoPrice.textContent = '1,200円';
+      
+      this.nodes.bodyInfo.appendChild(this.nodes.infoWeek);
+      this.nodes.bodyInfo.appendChild(this.nodes.infoPrice);
+      this.nodes.bodyHolder.appendChild(this.nodes.bodyInfo);
     }
 
-    this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
-    this.nodes.linkContent.setAttribute('href', this.data.link);
-    this.nodes.linkContent.appendChild(this.nodes.linkText);
-
     try {
-      this.nodes.linkText.textContent = (new URL(this.data.link)).hostname;
+      const getHost = (new URL(this.data.link)).hostname;
     } catch (e) {
       this.nodes.linkText.textContent = this.data.link;
     }
