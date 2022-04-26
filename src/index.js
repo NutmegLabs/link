@@ -196,7 +196,6 @@ export default class LinkTool {
       inputHolder: 'link-tool__input-holder',
       inputError: 'link-tool__input-holder--error',
       linkContent: 'c-itemCard__item',
-      //linkContentRendered: 'link-tool__content--rendered',
       linkImage: 'c-itemCard__item__pic',
       body: 'c-itemCard__item__body',
       linkTitle: 'c-itemCard__item__body__ttl',
