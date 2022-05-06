@@ -196,6 +196,7 @@ export default class LinkTool {
       inputHolder: 'link-tool__input-holder',
       inputError: 'link-tool__input-holder--error',
       linkContent: 'c-itemCard__item',
+      // linkContentRendered: 'link-tool__content--rendered',
       linkImage: 'c-itemCard__item__pic',
       body: 'c-itemCard__item__body',
       linkTitle: 'c-itemCard__item__body__ttl',
@@ -308,11 +309,12 @@ export default class LinkTool {
    * @returns {HTMLElement}
    */
   prepareLinkPreview() {
-    //const holder = this.make('a', this.CSS.linkContent, {
+    // const holder = this.make('a', this.CSS.linkContent, {
     //  target: '_blank',
     //  rel: 'nofollow noindex noreferrer',
-    //});
+    // });
     const holder = this.make('div', this.CSS.linkContent);
+
     this.nodes.anchor = this.make('a', null, {
       target: '_blank',
       rel: 'nofollow noindex noreferrer',
@@ -332,13 +334,14 @@ export default class LinkTool {
    *
    * @param {metaData} meta - link meta data
    */
-  showLinkPreview({ image, title, description }) {
+  showLinkPreview({ image, title, description, price }) {
     this.nodes.container.appendChild(this.nodes.linkContent);
 
-    if (image && image.url) {
-      const img = this.make('img', null, { src: image.url});
+    if (image) {
+      const img = this.make('img', null, { src: image });
+
       this.nodes.linkImage.appendChild(img);
-      //this.nodes.linkImage.style.backgroundImage = 'url(' + image.url + ')';
+      // this.nodes.linkImage.style.backgroundImage = 'url(' + image.url + ')';
       this.nodes.anchor.appendChild(this.nodes.linkImage);
     }
 
@@ -355,18 +358,18 @@ export default class LinkTool {
     this.nodes.anchor.appendChild(this.nodes.bodyHolder);
     this.nodes.anchor.appendChild(this.nodes.textArrow);
 
-    //this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
+    // this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
     this.nodes.anchor.setAttribute('href', this.data.link);
 
-    //TODO if week and price
-    if (true) {
+    // TODO if week and price
+    if (price) {
       this.nodes.bodyInfo = this.make('div', this.CSS.bodyInfo);
       this.nodes.infoWeek = this.make('p', this.CSS.infoWeek);
-      this.nodes.infoPrice = this.make('p', this.CSS.infoPrice, { style: 'color:#0094CC'});
+      this.nodes.infoPrice = this.make('p', this.CSS.infoPrice, { style: 'color:#0094CC' });
 
       this.nodes.infoWeek.textContent = '開催日:月,火,水,木,金,土';
       this.nodes.infoPrice.textContent = '1,200円';
-      
+
       this.nodes.bodyInfo.appendChild(this.nodes.infoWeek);
       this.nodes.bodyInfo.appendChild(this.nodes.infoPrice);
       this.nodes.bodyHolder.appendChild(this.nodes.bodyInfo);
@@ -374,6 +377,10 @@ export default class LinkTool {
 
     try {
       const getHost = (new URL(this.data.link)).hostname;
+
+      if (!getHost) {
+        console.error("can't get host name");
+      }
     } catch (e) {
       this.nodes.linkText.textContent = this.data.link;
     }
@@ -416,7 +423,7 @@ export default class LinkTool {
     this.data = { link: url };
 
     try {
-      const { body } = await (ajax.get({
+      const { body, code } = await (ajax.get({
         url: this.config.endpoint,
         headers: this.config.headers,
         data: {
@@ -424,7 +431,7 @@ export default class LinkTool {
         },
       }));
 
-      this.onFetch(body);
+      this.onFetch(body, code);
     } catch (error) {
       this.fetchingFailed(this.api.i18n.t('Couldn\'t fetch the link data'));
     }
@@ -434,15 +441,17 @@ export default class LinkTool {
    * Link data fetching callback
    *
    * @param {UploadResponseFormat} response
+   * @param code
    */
-  onFetch(response) {
-    if (!response || !response.success) {
+  onFetch(response, code) {
+    if (code >= 400) {
       this.fetchingFailed(this.api.i18n.t('Couldn\'t get this link data, try the other one'));
+      console.error(response);
 
       return;
     }
 
-    const metaData = response.meta;
+    const metaData = response;
 
     const link = response.link || this.data.link;
 
