@@ -159,3 +159,11 @@ text-decoration: none;color: inherit;}
   .c-itemCard__item__body { padding: 16px; }
   .c-itemCard__item__arrow { display: none; };
 }
+@-webkit-keyframes progress {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 85%;
+  }
+}
