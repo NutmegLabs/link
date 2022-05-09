@@ -334,11 +334,11 @@ export default class LinkTool {
    *
    * @param {metaData} meta - link meta data
    */
-  showLinkPreview({ image, title, description, operatingDaysOfWeek, lowestPriceGross }) {
+  showLinkPreview(meta) {
     this.nodes.container.appendChild(this.nodes.linkContent);
 
-    if (image) {
-      const img = this.make('img', null, { src: image });
+    if (meta.image) {
+      const img = this.make('img', null, { src: meta.image });
 
       this.nodes.linkImage.appendChild(img);
       // this.nodes.linkImage.style.backgroundImage = 'url(' + image.url + ')';
@@ -346,13 +346,13 @@ export default class LinkTool {
     }
 
     this.nodes.bodyHolder = this.make('div', this.CSS.body);
-    if (title) {
-      this.nodes.linkTitle.textContent = title;
+    if (meta.title) {
+      this.nodes.linkTitle.textContent = meta.title;
       this.nodes.bodyHolder.appendChild(this.nodes.linkTitle);
     }
 
-    if (description) {
-      this.nodes.linkDescription.textContent = description;
+    if (meta.description) {
+      this.nodes.linkDescription.textContent = meta.description;
       this.nodes.bodyHolder.appendChild(this.nodes.linkDescription);
     }
     this.nodes.anchor.appendChild(this.nodes.bodyHolder);
@@ -362,18 +362,18 @@ export default class LinkTool {
     this.nodes.anchor.setAttribute('href', this.data.link);
 
     // TODO if week and price
-    if (lowestPriceGross || operatingDaysOfWeek) {
+    if (meta.lowest_price_gross || meta.operating_days_of_week) {
       this.nodes.bodyInfo = this.make('div', this.CSS.bodyInfo);
 
-      if (lowestPriceGross) {
+      if (meta.lowest_price_gross) {
         this.nodes.infoPrice = this.make('p', this.CSS.infoPrice, { style: 'color:#0094CC' });
-        this.nodes.infoPrice.textContent = lowestPriceGross;
+        this.nodes.infoPrice.textContent = meta.lowest_price_gross;
         this.nodes.bodyInfo.appendChild(this.nodes.infoPrice);
       }
 
-      if (operatingDaysOfWeek) {
+      if (meta.operating_days_of_week) {
         this.nodes.infoWeek = this.make('p', this.CSS.infoWeek);
-        this.nodes.infoWeek.textContent = operatingDaysOfWeek;
+        this.nodes.infoWeek.textContent = meta.operating_days_of_week;
         this.nodes.bodyInfo.appendChild(this.nodes.infoWeek);
       }
 
@@ -449,6 +449,7 @@ export default class LinkTool {
    * @param code
    */
   onFetch(response, code) {
+    console.log(response);
     if (code >= 400) {
       this.fetchingFailed(this.api.i18n.t('Couldn\'t get this link data, try the other one'));
       console.error(response);
