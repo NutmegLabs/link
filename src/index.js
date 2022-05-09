@@ -334,7 +334,7 @@ export default class LinkTool {
    *
    * @param {metaData} meta - link meta data
    */
-  showLinkPreview({ image, title, description, price }) {
+  showLinkPreview({ image, title, description, operating_days_of_week, lowest_price_gross }) {
     this.nodes.container.appendChild(this.nodes.linkContent);
 
     if (image) {
@@ -362,16 +362,21 @@ export default class LinkTool {
     this.nodes.anchor.setAttribute('href', this.data.link);
 
     // TODO if week and price
-    if (price) {
+    if (lowest_price_gross || operating_days_of_week) {
       this.nodes.bodyInfo = this.make('div', this.CSS.bodyInfo);
-      this.nodes.infoWeek = this.make('p', this.CSS.infoWeek);
-      this.nodes.infoPrice = this.make('p', this.CSS.infoPrice, { style: 'color:#0094CC' });
 
-      this.nodes.infoWeek.textContent = '開催日:月,火,水,木,金,土';
-      this.nodes.infoPrice.textContent = '1,200円';
+      if (lowest_price_gross) {
+        this.nodes.infoPrice = this.make('p', this.CSS.infoPrice, { style: 'color:#0094CC' });
+        this.nodes.infoPrice.textContent = lowest_price_gross;
+        this.nodes.bodyInfo.appendChild(this.nodes.infoPrice);
+      }
+      
+      if (operating_days_of_week) {
+        this.nodes.infoWeek = this.make('p', this.CSS.infoWeek);
+        this.nodes.infoWeek.textContent = operating_days_of_week;
+        this.nodes.bodyInfo.appendChild(this.nodes.infoWeek);
+      }
 
-      this.nodes.bodyInfo.appendChild(this.nodes.infoWeek);
-      this.nodes.bodyInfo.appendChild(this.nodes.infoPrice);
       this.nodes.bodyHolder.appendChild(this.nodes.bodyInfo);
     }
 
