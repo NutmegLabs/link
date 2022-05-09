@@ -334,7 +334,7 @@ export default class LinkTool {
    *
    * @param {metaData} meta - link meta data
    */
-  showLinkPreview({ image, title, description, operating_days_of_week, lowest_price_gross }) {
+  showLinkPreview({ image, title, description, operatingDaysOfWeek, lowestPriceGross }) {
     this.nodes.container.appendChild(this.nodes.linkContent);
 
     if (image) {
@@ -362,18 +362,18 @@ export default class LinkTool {
     this.nodes.anchor.setAttribute('href', this.data.link);
 
     // TODO if week and price
-    if (lowest_price_gross || operating_days_of_week) {
+    if (lowestPriceGross || operatingDaysOfWeek) {
       this.nodes.bodyInfo = this.make('div', this.CSS.bodyInfo);
 
-      if (lowest_price_gross) {
+      if (lowestPriceGross) {
         this.nodes.infoPrice = this.make('p', this.CSS.infoPrice, { style: 'color:#0094CC' });
-        this.nodes.infoPrice.textContent = lowest_price_gross;
+        this.nodes.infoPrice.textContent = lowestPriceGross;
         this.nodes.bodyInfo.appendChild(this.nodes.infoPrice);
       }
-      
-      if (operating_days_of_week) {
+
+      if (operatingDaysOfWeek) {
         this.nodes.infoWeek = this.make('p', this.CSS.infoWeek);
-        this.nodes.infoWeek.textContent = operating_days_of_week;
+        this.nodes.infoWeek.textContent = operatingDaysOfWeek;
         this.nodes.bodyInfo.appendChild(this.nodes.infoWeek);
       }
 
