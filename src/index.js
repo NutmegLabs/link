@@ -365,16 +365,16 @@ export default class LinkTool {
     if (meta.lowest_price_gross || meta.operating_days_of_week) {
       this.nodes.bodyInfo = this.make('div', this.CSS.bodyInfo);
 
-      if (meta.lowest_price_gross) {
-        this.nodes.infoPrice = this.make('p', this.CSS.infoPrice, { style: 'color:#0094CC' });
-        this.nodes.infoPrice.textContent = meta.lowest_price_gross;
-        this.nodes.bodyInfo.appendChild(this.nodes.infoPrice);
-      }
-
       if (meta.operating_days_of_week) {
         this.nodes.infoWeek = this.make('p', this.CSS.infoWeek);
         this.nodes.infoWeek.textContent = meta.operating_days_of_week;
         this.nodes.bodyInfo.appendChild(this.nodes.infoWeek);
+      }
+
+      if (meta.lowest_price_gross) {
+        this.nodes.infoPrice = this.make('p', this.CSS.infoPrice, { style: 'color:#0094CC' });
+        this.nodes.infoPrice.textContent = meta.lowest_price_gross;
+        this.nodes.bodyInfo.appendChild(this.nodes.infoPrice);
       }
 
       this.nodes.bodyHolder.appendChild(this.nodes.bodyInfo);
