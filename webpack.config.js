@@ -25,8 +25,13 @@ module.exports = {
         ]
       },
       {
-        test: /\.svg$/,
+        test: /toolbox\.svg$/,
         loader: 'svg-inline-loader?removeSVGTagAttrs=false'
+      },
+      {
+        test: /(ic_star_off|ic_star_on)\.svg$/,
+        loader: 'svg-url-loader',
+        exclude: /toolbox\.svg$/,
       }
     ]
   },

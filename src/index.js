@@ -19,6 +19,8 @@ import ToolboxIcon from './svg/toolbox.svg';
 import ajax from '@codexteam/ajax';
 // eslint-disable-next-line
 import polyfill from 'url-polyfill';
+import StarOn from './svg/ic_star_on.svg';
+import StarOff from './svg/ic_star_off.svg';
 
 /**
  * @typedef {object} UploadResponseFormat
@@ -64,10 +66,7 @@ export default class LinkTool {
   }
 
   /**
-   * @param {LinkToolData} data - previously saved data
-   * @param {config} config - user config for Tool
-   * @param {object} api - Editor.js API
-   * @param {boolean} readOnly - read-only mode flag
+   * @param {object} - previously saved data
    */
   constructor({ data, config, api, readOnly }) {
     this.api = api;
@@ -79,6 +78,9 @@ export default class LinkTool {
     this.config = {
       endpoint: config.endpoint || '',
       headers: config.headers || {},
+      apikey: config.apikey || '',
+      language: config.language || '',
+      attribution: config.attribution || {},
     };
 
     this.nodes = {
@@ -99,6 +101,53 @@ export default class LinkTool {
       infoPrice: null,
     };
 
+    this.isReview = false;
+
+    this.reviewNodes = {
+      itemTop: null,
+      itemTopReview: null,
+      itemTopReviewStars: null,
+      itemTopReviewNum: null,
+      itemTopInfo: null,
+      itemTopInfoDate: null,
+      itemTopInfoType: null,
+      itemTtl: null,
+      itemMessage: null,
+      itemMore: null,
+      itemPic: null,
+      itemPicList: null,
+      itemPicPrev: null,
+      itemPicNext: null,
+      itemUser: null,
+      itemUserIc: null,
+      itemUserInfo: null,
+      itemUserInfoName: null,
+      itemUserInfoDate: null,
+      itemReply: null,
+      itemReplyTtl: null,
+      itemReplyBox: null,
+      itemReplyMessage: null,
+      itemReplyMore: null,
+      itemMoreButton: null,
+      itemReplyMoreButton: null,
+    };
+
+    this.head = {};
+    this.pic = [];
+    this.bound = 0;
+    this.itemWidth = 0;
+    this.maxWidth = 0;
+    this.totalRight = 0;
+    this.visibleRight = 0;
+    this.visibleWidth = 0;
+    this.remainWidth = 0;
+    this.isMore = false;
+    this.isReplyMore = false;
+    this.moreText = 'See More';
+    this.moreCloseText = 'Show Less';
+    this.participationDateText = 'Participation Date';
+    this.writtenDateText = 'Posted Date';
+
     this._data = {
       link: '',
       meta: {},
@@ -112,7 +161,7 @@ export default class LinkTool {
    *
    * @public
    *
-   * @returns {HTMLDivElement}
+   * @returns {object} this.nodes.wrapper - render element wrapper
    */
   render() {
     this.nodes.wrapper = this.make('div', this.CSS.baseClass);
@@ -120,13 +169,23 @@ export default class LinkTool {
 
     this.nodes.inputHolder = this.makeInputHolder();
     this.nodes.linkContent = this.prepareLinkPreview();
+    this.nodes.reviewContent = this.prepareReviewPreview();
+
+    // if (this.isReview == true) {
+    //  this.nodes.linkContent = this.prepareReviewPreview();
+    // }
 
     /**
      * If Tool already has data, render link preview, otherwise insert input
      */
     if (Object.keys(this.data.meta).length) {
-      this.nodes.container.appendChild(this.nodes.linkContent);
-      this.showLinkPreview(this.data.meta);
+      if (this.isReview) {
+        this.nodes.container.appendChild(this.nodes.reviewContent);
+        this.showReviewPreview(this.data.meta);
+      } else {
+        this.nodes.container.appendChild(this.nodes.linkContent);
+        this.showLinkPreview(this.data.meta);
+      }
     } else {
       this.nodes.container.appendChild(this.nodes.inputHolder);
     }
@@ -162,7 +221,7 @@ export default class LinkTool {
   /**
    * Stores all Tool's data
    *
-   * @param {LinkToolData} data
+   * @param {LinkToolData} data - fetch data
    */
   set data(data) {
     this._data = Object.assign({}, {
@@ -208,13 +267,40 @@ export default class LinkTool {
       progress: 'link-tool__progress',
       progressLoading: 'link-tool__progress--loading',
       progressLoaded: 'link-tool__progress--loaded',
+
+      reviewLinkContent: 'c-review__list__comment__item',
+      reviewItemTop: 'c-review__list__comment__item__top',
+      reviewItemTopReview: 'c-review__list__comment__item__top__review',
+      reviewItemTopReviewStars: 'c-review__list__comment__item__top__review__stars',
+      reviewItemTopReviewNum: 'c-review__list__comment__item__top__review__num',
+      reviewItemTopInfo: 'c-review__list__comment__item__top__info',
+      reviewItemTopInfoDate: 'c-review__list__comment__item__top__info__date',
+      reviewItemTopInfoType: 'c-review__list__comment__item__top__info__type',
+      reviewItemTtl: 'c-review__list__comment__item__ttl',
+      reviewItemMessage: 'c-review__list__comment__item__message',
+      reviewItemMore: 'c-review__list__comment__item__more',
+      reviewItemPic: 'c-review__list__comment__item__pic',
+      reviewItemPicList: 'c-review__list__comment__item__pic__list',
+      reviewItemPicPrev: 'c-review__list__comment__item__pic__prev',
+      reviewItemPicNext: 'c-review__list__comment__item__pic__next',
+      reviewItemUser: 'c-review__list__comment__item__user',
+      reviewItemUserIc: 'c-review__list__comment__item__user__ic',
+      reviewItemUserInfo: 'c-review__list__comment__item__user__info',
+      reviewItemUserInfoName: 'c-review__list__comment__item__user__info__name',
+      reviewItemUserInfoDate: 'c-review__list__comment__item__user__info__date',
+      reviewItemReply: 'c-review__list__comment__item__reply',
+      reviewItemReplyTtl: 'c-review__list__comment__item__reply__ttl',
+      reviewItemReplyBox: 'c-review__list__comment__item__reply__box',
+      reviewItemReplyMessage: 'c-review__list__comment__item__reply__message',
+      reviewItemReplyMore: 'c-review__list__comment__item__reply__more',
+
     };
   }
 
   /**
    * Prepare input holder
    *
-   * @returns {HTMLElement}
+   * @returns {object} inputHolder - make input holder
    */
   makeInputHolder() {
     const inputHolder = this.make('div', this.CSS.inputHolder);
@@ -227,9 +313,9 @@ export default class LinkTool {
     this.nodes.input.dataset.placeholder = this.api.i18n.t('Link');
 
     if (!this.readOnly) {
-      this.nodes.input.addEventListener('paste', (event) => {
-        this.startFetching(event);
-      });
+      // this.nodes.input.addEventListener('paste', (event) => {
+      //  this.startFetching(event);
+      // });
 
       this.nodes.input.addEventListener('keydown', (event) => {
         const [ENTER, A] = [13, 65];
@@ -260,7 +346,7 @@ export default class LinkTool {
   /**
    * Activates link data fetching by url
    *
-   * @param {PasteEvent} event
+   * @param {object} event - window event
    */
   startFetching(event) {
     let url = this.nodes.input.textContent;
@@ -268,6 +354,19 @@ export default class LinkTool {
     if (event.type === 'paste') {
       url = (event.clipboardData || window.clipboardData).getData('text');
     }
+
+    const regex =
+      new RegExp(/https?:\/\/((api(.dev)?(.stg)?.ntmg.com)|(localhost:3007))\/v1\/reviews\/([^/?&"]+)/);
+
+    if (regex.test(url)) {
+      this.isReview = true;
+      this.head = {
+        accept: 'application/json, text/plain, */*',
+        'accept-language': this.config.language,
+        'x-api-key': this.config.apikey,
+      };
+    }
+    // const testUrl = 'http://localhost:3007/v1/reviews/0c3c6345-a007-49f7-b46c-32d9c22657a2';
 
     this.removeErrorStyle();
     this.fetchLinkData(url);
@@ -284,7 +383,9 @@ export default class LinkTool {
   /**
    * Select LinkTool input content by CMD+A
    *
-   * @param {KeyboardEvent} event
+   * @param {object} event - use keyboard event
+   *
+   * @returns {void}
    */
   selectLinkUrl(event) {
     event.preventDefault();
@@ -306,7 +407,7 @@ export default class LinkTool {
   /**
    * Prepare link preview holder
    *
-   * @returns {HTMLElement}
+   * @returns {object} holder - return prepare render html element
    */
   prepareLinkPreview() {
     // const holder = this.make('a', this.CSS.linkContent, {
@@ -325,6 +426,45 @@ export default class LinkTool {
     this.nodes.linkTitle = this.make('h3', this.CSS.linkTitle);
     this.nodes.linkDescription = this.make('p', this.CSS.linkDescription);
     this.nodes.textArrow = this.make('i', this.CSS.textArrow, { style: 'border-color:#0094CC;' });
+
+    return holder;
+  }
+
+  /**
+   * Prepare review preview holder
+   *
+   * @returns {object} holder - return prepare render review html element
+   */
+  prepareReviewPreview() {
+    const holder = this.make('div', this.CSS.reviewLinkContent);
+
+    this.reviewNodes.itemTop = this.make('div', this.CSS.reviewItemTop);
+
+    this.reviewNodes.itemTopReview = this.make('div', this.CSS.reviewItemTopReview);
+    this.reviewNodes.itemTopReviewStars = this.make('div', this.CSS.reviewItemTopReviewStars);
+    this.reviewNodes.itemTopReviewNum = this.make('p', this.CSS.reviewItemTopReviewNum);
+    this.reviewNodes.itemTopReview.appendChild(this.reviewNodes.itemTopReviewStars);
+    this.reviewNodes.itemTopReview.appendChild(this.reviewNodes.itemTopReviewNum);
+
+    this.reviewNodes.itemTopInfo = this.make('div', this.CSS.reviewItemTopInfo);
+    this.reviewNodes.itemTopInfoDate = this.make('p', this.CSS.reviewItemTopInfoDate);
+    this.reviewNodes.itemTopInfoType = this.make('p', this.CSS.reviewItemTopInfoType);
+    this.reviewNodes.itemTopInfo.appendChild(this.reviewNodes.itemTopInfoDate);
+    this.reviewNodes.itemTopInfo.appendChild(this.reviewNodes.itemTopInfoType);
+    this.reviewNodes.itemTop.appendChild(this.reviewNodes.itemTopReview);
+    this.reviewNodes.itemTop.appendChild(this.reviewNodes.itemTopInfo);
+
+    this.reviewNodes.itemTtl = this.make('p', this.CSS.reviewItemTtl);
+
+    this.reviewNodes.itemUser = this.make('div', this.CSS.reviewItemUser);
+    this.reviewNodes.itemUserIc = this.make('p', this.CSS.reviewItemUserIc);
+    this.reviewNodes.itemUserInfo = this.make('p', this.CSS.reviewItemUserInfo);
+    this.reviewNodes.itemUserInfoName = this.make('p', this.CSS.reviewItemUserInfoName);
+    this.reviewNodes.itemUserInfoDate = this.make('p', this.CSS.reviewItemUserInfoDate);
+    this.reviewNodes.itemUserInfo.appendChild(this.reviewNodes.itemUserInfoName);
+    this.reviewNodes.itemUserInfo.appendChild(this.reviewNodes.itemUserInfoDate);
+    this.reviewNodes.itemUser.appendChild(this.reviewNodes.itemUserIc);
+    this.reviewNodes.itemUser.appendChild(this.reviewNodes.itemUserInfo);
 
     return holder;
   }
@@ -392,7 +532,296 @@ export default class LinkTool {
   }
 
   /**
+   * Compose review preview from fetched data
+   *
+   * @param {metaData} meta - review meta data
+   */
+  showReviewPreview(meta) {
+    this.nodes.container.appendChild(this.nodes.reviewContent);
+
+    if (meta.review.guest_language) {
+      this.moreText = this.config.language == 'JA-JP' ? 'もっと見る' : 'See More';
+      this.moreCloseText = this.config.language == 'JA-JP' ? '閉じる' : 'Show Less';
+      this.participationDateText = this.config.language == 'JA-JP' ? '参加日' : 'Participation Date';
+      this.writtenDateText = this.config.language == 'JA-JP' ? '投稿日' : 'Posted Date';
+    }
+
+    if (meta.review.rating) {
+      const rate = meta.review.rating.replace('REVIEW_RATING_', '');
+
+      for (let i = 0; i < 5; i++) {
+        let img;
+
+        if (i < rate) {
+          img = this.make('img', null, { src: StarOn });
+          // img = this.make('img', null, { src: 'https://michi-s4.book.stg.ntmg.com/static/images/ic_star_on.svg' });
+          this.reviewNodes.itemTopReviewStars.appendChild(img);
+        } else {
+          img = this.make('img', null, { src: StarOff });
+          // img = this.make('img', null, { src: 'https://michi-s4.book.stg.ntmg.com/static/images/ic_star_on.svg' });
+          this.reviewNodes.itemTopReviewStars.appendChild(img);
+        }
+      }
+      this.reviewNodes.itemTopReviewNum.textContent = rate;
+    }
+
+    if (meta.review.participation_date_time_local) {
+      this.reviewNodes.itemTopInfoDate.textContent =
+        this.participationDateText + ':' + meta.review.participation_date_time_local.substring(0, 7);
+    }
+    if (meta.review.attribution) {
+      this.reviewNodes.itemTopInfoType.textContent = this.config.attribution[`${this.config.language}`][`${meta.review.attribution}`];
+    }
+    if (meta.review.title) {
+      this.reviewNodes.itemTtl.textContent = meta.review.title;
+    }
+    if (meta.review.body) {
+      this.reviewNodes.itemMore = this.make('div', this.CSS.reviewItemMore);
+      this.reviewNodes.itemMoreButton = this.make('a', null);
+      this.reviewNodes.itemMoreButton.textContent = this.moreText;
+      this.reviewNodes.itemMoreButton.addEventListener('click', () => {
+        this.toggleMore();
+      });
+      this.reviewNodes.itemMore.appendChild(this.reviewNodes.itemMoreButton);
+
+      this.reviewNodes.itemMessage = this.make('p', [this.CSS.reviewItemMessage, 'newline']);
+      this.reviewNodes.itemMessage.textContent = meta.review.body;
+    }
+    if (meta.review.media_items) {
+      this.reviewNodes.itemPic = this.make('div', this.CSS.reviewItemPic);
+      this.reviewNodes.itemPicList = this.make('ul', this.CSS.reviewItemPicList);
+      this.reviewNodes.itemPicPrev = this.make('a', this.CSS.reviewItemPicPrev);
+      this.reviewNodes.itemPicNext = this.make('a', this.CSS.reviewItemPicNext);
+      this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicList);
+      this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicPrev);
+      this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicNext);
+
+      meta.review.media_items.map(media => {
+        const li = this.make('li');
+
+        li.addEventListener('click', () => {
+          this.showModal(media.url);
+        });
+        li.appendChild(this.make('img', null, { src: media.url }));
+        this.reviewNodes.itemPicList.appendChild(li);
+        this.pic.push(li);
+      });
+    }
+    if (meta.review.guest_nickname) {
+      this.reviewNodes.itemUserIc.textContent = meta.review.guest_nickname.substring(0, 1);
+      this.reviewNodes.itemUserInfoName.textContent = meta.review.guest_nickname;
+    }
+    if (meta.review.written_date_time_utc) {
+      const writtenDate = new Date(meta.review.written_date_time_utc);
+
+      this.reviewNodes.itemUserInfoDate.textContent =
+        this.writtenDateText + ':' + writtenDate.getUTCFullYear() +
+        '/' + writtenDate.getUTCMonth() + '/' + writtenDate.getUTCDate();
+    }
+    if (meta.review.supplier_comments) {
+      this.reviewNodes.itemReply = this.make('div', this.CSS.reviewItemReply);
+      this.reviewNodes.itemReplyTtl = this.make('p', this.CSS.reviewItemReplyTtl);
+      this.reviewNodes.itemReplyBox = this.make('div', this.CSS.reviewItemReplyBox);
+      this.reviewNodes.itemReplyMessage = this.make('p', [this.CSS.reviewItemReplyMessage, 'newline']);
+
+      this.reviewNodes.itemReplyMore = this.make('p', this.CSS.reviewItemReplyMore);
+      this.reviewNodes.itemReplyMoreButton = this.make('a', null);
+      this.reviewNodes.itemReplyMoreButton.textContent = this.moreText;
+      this.reviewNodes.itemReplyMoreButton.addEventListener('click', () => {
+        this.toggleReplyMore();
+      });
+      this.reviewNodes.itemReplyMore.appendChild(this.reviewNodes.itemReplyMoreButton);
+
+      this.reviewNodes.itemReplyBox.appendChild(this.reviewNodes.itemReplyMessage);
+      this.reviewNodes.itemReply.appendChild(this.reviewNodes.itemReplyTtl);
+      this.reviewNodes.itemReply.appendChild(this.reviewNodes.itemReplyBox);
+
+      this.reviewNodes.itemReplyMessage.textContent = meta.review.supplier_comments;
+      this.reviewNodes.itemReplyTtl.textContent =
+        this.config.language == 'JA-JP'
+          ? meta.translate_supplier_name + 'からの返信'
+          : 'Reply from ' + meta.translate_supplier_name;
+    }
+
+    // add holder
+    this.nodes.reviewContent.appendChild(this.reviewNodes.itemTop);
+    this.nodes.reviewContent.appendChild(this.reviewNodes.itemTtl);
+    this.nodes.reviewContent.appendChild(this.reviewNodes.itemMessage);
+    if (this.reviewNodes.itemMessage.scrollHeight > 70) {
+      this.reviewNodes.itemMessage.classList.add('is-close');
+      this.nodes.reviewContent.appendChild(this.reviewNodes.itemMore);
+    }
+    if (meta.review.media_items) {
+      this.nodes.reviewContent.appendChild(this.reviewNodes.itemPic);
+
+      // slider parts
+      this.itemWidth = this.pic[0].getBoundingClientRect().width + 16;
+      this.maxWidth = this.itemWidth * this.pic.length;
+      this.totalRight = -this.bound + this.reviewNodes.itemPicList.getBoundingClientRect().left + this.maxWidth + 16;
+      this.visibleRight = this.reviewNodes.itemPicList.getBoundingClientRect().right - 16;
+      this.visibleWidth =
+        this.reviewNodes.itemPicList.getBoundingClientRect().right -
+        this.reviewNodes.itemPicList.getBoundingClientRect().left - 32;
+      this.remainWidth = this.totalRight - this.visibleRight;
+      this.reviewNodes.itemPicPrev.style = 'visibility: hidden;';
+      if (this.totalRight < this.visibleRight + 16) {
+        this.reviewNodes.itemPicNext.style = 'visibility: hidden;';
+      }
+      this.reviewNodes.itemPicPrev.addEventListener('click', () => {
+        this.slidePrev();
+      });
+      this.reviewNodes.itemPicNext.addEventListener('click', () => {
+        this.slideNext();
+      });
+    }
+    this.nodes.reviewContent.appendChild(this.reviewNodes.itemUser);
+    if (meta.review.supplier_comments) {
+      this.nodes.reviewContent.appendChild(this.reviewNodes.itemReply);
+      if (this.reviewNodes.itemReplyMessage.scrollHeight > 70) {
+        this.reviewNodes.itemReplyBox.appendChild(this.reviewNodes.itemReplyMore);
+        this.reviewNodes.itemReplyMessage.classList.add('is-close');
+      }
+    }
+
+    try {
+      const getHost = (new URL(this.data.link)).hostname;
+
+      if (!getHost) {
+        console.error("can't get host name");
+      }
+    } catch (e) {
+      this.nodes.linkText.textContent = this.data.link;
+    }
+  }
+
+  /**
+   * Move image slide
+   *
+   * @private
+   */
+  slideNext() {
+    if (this.totalRight <= this.visibleRight) {
+      return;
+    }
+
+    const delta = Math.min(this.remainWidth, this.visibleWidth);
+
+    this.bound =
+      delta == this.remainWidth
+        ? this.bound + delta
+        : Math.floor((this.bound + delta) / this.itemWidth) * this.itemWidth;
+    this.totalRight = -this.bound + this.reviewNodes.itemPicList.getBoundingClientRect().left + this.maxWidth + 16;
+    this.remainWidth = this.totalRight - this.visibleRight;
+
+    if (this.totalRight <= this.visibleRight) {
+      this.reviewNodes.itemPicNext.style = 'visibility: hidden;';
+    }
+
+    if (this.bound > 0) {
+      this.reviewNodes.itemPicPrev.removeAttribute('style');
+    }
+    this.pic.map(image => {
+      // image.style = 'transform: translateX(-30px);';
+      image.style = 'transform: translateX(' + -this.bound + 'px);';
+    });
+  }
+
+  /**
+   * Move image slide
+   *
+   * @private
+   */
+  slidePrev() {
+    if (this.bound === 0) {
+      return;
+    }
+
+    const delta = Math.min(this.bound, this.visibleWidth);
+
+    this.bound = Math.floor((this.bound - delta) / this.itemWidth) * this.itemWidth;
+    this.totalRight = -this.bound + this.reviewNodes.itemPicList.getBoundingClientRect().left + this.maxWidth + 16;
+    this.remainWidth = this.totalRight - this.visibleRight;
+
+    if (this.remainWidth > 0) {
+      this.reviewNodes.itemPicNext.removeAttribute('style');
+    }
+
+    this.pic.map(image => {
+      image.style = 'transform: translateX(' + -this.bound + 'px);';
+    });
+    if (this.bound === 0) {
+      this.reviewNodes.itemPicPrev.style = 'visibility: hidden;';
+    }
+  }
+
+  /**
+   * Toggle Message
+   *
+   * @private
+   */
+  toggleMore() {
+    if (this.isMore) {
+      this.reviewNodes.itemMessage.classList.add('is-close');
+      this.reviewNodes.itemMoreButton.textContent = this.moreText;
+      this.isMore = false;
+
+      return;
+    }
+    this.reviewNodes.itemMessage.classList.remove('is-close');
+    this.reviewNodes.itemMoreButton.textContent = this.moreCloseText;
+    this.isMore = true;
+  }
+
+  /**
+   * Toggle Reply Message
+   *
+   * @private
+   */
+  toggleReplyMore() {
+    if (this.isReplyMore) {
+      this.reviewNodes.itemReplyMessage.classList.add('is-close');
+      this.reviewNodes.itemReplyMoreButton.textContent = this.moreText;
+      this.isReplyMore = false;
+
+      return;
+    }
+    this.reviewNodes.itemReplyMessage.classList.remove('is-close');
+    this.reviewNodes.itemReplyMoreButton.textContent = this.moreCloseText;
+    this.isReplyMore = true;
+  }
+
+  /**
+   * Show Modal
+   *
+   * @private
+   *
+   * @param {string} url - modal image url
+   */
+  showModal(url) {
+    const modal = this.make('div', 'c-reviewPicture__modal');
+    const modalContent = this.make('div', 'c-reviewPicture__modal__modal__content');
+    const modalContentPick = this.make('div', 'c-reviewPicture__modal__modal__content__pic');
+    const img = this.make('img', null, { src: url });
+
+    modalContentPick.appendChild(img);
+    const close = this.make('a', 'c-reviewPicture__modal__modal__content__close');
+
+    close.addEventListener('click', () => {
+      const tmp = document.getElementsByClassName('c-reviewPicture__modal');
+
+      tmp[0].remove();
+    });
+    modalContent.appendChild(modalContentPick);
+    modalContent.appendChild(close);
+    modal.appendChild(modalContent);
+
+    this.nodes.reviewContent.appendChild(modal);
+  }
+
+  /**
    * Show loading progressbar
+   *
+   * @returns {void}
    */
   showProgress() {
     this.nodes.progress.classList.add(this.CSS.progressLoading);
@@ -400,6 +829,8 @@ export default class LinkTool {
 
   /**
    * Hide loading progressbar
+   *
+   * @returns {void}
    */
   hideProgress() {
     return new Promise((resolve) => {
@@ -412,6 +843,8 @@ export default class LinkTool {
 
   /**
    * If data fetching failed, set input error style
+   *
+   * @returns {void}
    */
   applyErrorStyle() {
     this.nodes.inputHolder.classList.add(this.CSS.inputError);
@@ -429,13 +862,12 @@ export default class LinkTool {
 
     try {
       const { body, code } = await (ajax.get({
-        url: this.config.endpoint,
-        headers: this.config.headers,
-        data: {
-          url,
-        },
+        url: this.isReview ? url : this.config.endpoint,
+        headers: this.isReview ? this.head : null,
+        data: this.isReview ? null : { url: url },
       }));
 
+      // this.onFetch(this.testBody, code);
       this.onFetch(body, code);
     } catch (error) {
       this.fetchingFailed(this.api.i18n.t('Couldn\'t fetch the link data'));
@@ -445,11 +877,10 @@ export default class LinkTool {
   /**
    * Link data fetching callback
    *
-   * @param {UploadResponseFormat} response
-   * @param code
+   * @param {UploadResponseFormat} response - response data
+   * @param {number} code - status code
    */
   onFetch(response, code) {
-    console.log(response);
     if (code >= 400) {
       this.fetchingFailed(this.api.i18n.t('Couldn\'t get this link data, try the other one'));
       console.error(response);
@@ -474,7 +905,11 @@ export default class LinkTool {
 
     this.hideProgress().then(() => {
       this.nodes.inputHolder.remove();
-      this.showLinkPreview(metaData);
+      if (this.isReview) {
+        this.showReviewPreview(metaData);
+      } else {
+        this.showLinkPreview(metaData);
+      }
     });
   }
 
@@ -483,7 +918,7 @@ export default class LinkTool {
    *
    * @private
    *
-   * @param {string} errorMessage
+   * @param {string} errorMessage - errorMessage
    */
   fetchingFailed(errorMessage) {
     this.api.notifier.show({
@@ -497,10 +932,10 @@ export default class LinkTool {
   /**
    * Helper method for elements creation
    *
-   * @param tagName
-   * @param classNames
-   * @param attributes
-   * @returns {HTMLElement}
+   * @param {string} tagName - html element name
+   * @param {string} classNames - class name
+   * @param {object} attributes - attribute param
+   * @returns {object} - return html element
    */
   make(tagName, classNames = null, attributes = {}) {
     const el = document.createElement(tagName);
