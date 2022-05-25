@@ -66,7 +66,7 @@ export default class LinkTool {
   }
 
   /**
-   * @param {object} - previously saved data
+   * @param {Object} - previously saved data
    */
   constructor({ data, config, api, readOnly }) {
     this.api = api;
@@ -81,6 +81,11 @@ export default class LinkTool {
       apikey: config.apikey || '',
       language: config.language || '',
       attribution: config.attribution || {},
+      supplierName: config.supplierName || '',
+      seeMoreText: config.seeMoreText || '',
+      showLessText: config.showLessText || '',
+      participationDateText: config.participationDateText || '',
+      writtenDateText: config.writtenDateText || '',
     };
 
     this.nodes = {
@@ -156,12 +161,13 @@ export default class LinkTool {
     this.data = data;
   }
 
+
   /**
    * Renders Block content
    *
    * @public
    *
-   * @returns {object} this.nodes.wrapper - render element wrapper
+   * @returns {Object} this.nodes.wrapper - render element wrapper
    */
   render() {
     this.nodes.wrapper = this.make('div', this.CSS.baseClass);
@@ -169,11 +175,11 @@ export default class LinkTool {
 
     this.nodes.inputHolder = this.makeInputHolder();
     this.nodes.linkContent = this.prepareLinkPreview();
-    this.nodes.reviewContent = this.prepareReviewPreview();
+    this.nodes.reviewContent = this.prepareReviewPreview()
 
-    // if (this.isReview == true) {
+    //if (this.isReview == true) {
     //  this.nodes.linkContent = this.prepareReviewPreview();
-    // }
+    //}
 
     /**
      * If Tool already has data, render link preview, otherwise insert input
@@ -269,30 +275,30 @@ export default class LinkTool {
       progressLoaded: 'link-tool__progress--loaded',
 
       reviewLinkContent: 'c-review__list__comment__item',
-      reviewItemTop: 'c-review__list__comment__item__top',
-      reviewItemTopReview: 'c-review__list__comment__item__top__review',
-      reviewItemTopReviewStars: 'c-review__list__comment__item__top__review__stars',
-      reviewItemTopReviewNum: 'c-review__list__comment__item__top__review__num',
-      reviewItemTopInfo: 'c-review__list__comment__item__top__info',
-      reviewItemTopInfoDate: 'c-review__list__comment__item__top__info__date',
-      reviewItemTopInfoType: 'c-review__list__comment__item__top__info__type',
-      reviewItemTtl: 'c-review__list__comment__item__ttl',
-      reviewItemMessage: 'c-review__list__comment__item__message',
-      reviewItemMore: 'c-review__list__comment__item__more',
-      reviewItemPic: 'c-review__list__comment__item__pic',
-      reviewItemPicList: 'c-review__list__comment__item__pic__list',
-      reviewItemPicPrev: 'c-review__list__comment__item__pic__prev',
-      reviewItemPicNext: 'c-review__list__comment__item__pic__next',
-      reviewItemUser: 'c-review__list__comment__item__user',
-      reviewItemUserIc: 'c-review__list__comment__item__user__ic',
-      reviewItemUserInfo: 'c-review__list__comment__item__user__info',
-      reviewItemUserInfoName: 'c-review__list__comment__item__user__info__name',
-      reviewItemUserInfoDate: 'c-review__list__comment__item__user__info__date',
-      reviewItemReply: 'c-review__list__comment__item__reply',
-      reviewItemReplyTtl: 'c-review__list__comment__item__reply__ttl',
-      reviewItemReplyBox: 'c-review__list__comment__item__reply__box',
-      reviewItemReplyMessage: 'c-review__list__comment__item__reply__message',
-      reviewItemReplyMore: 'c-review__list__comment__item__reply__more',
+      reviewItemTop:  'c-review__list__comment__item__top',
+      reviewItemTopReview:  'c-review__list__comment__item__top__review',
+      reviewItemTopReviewStars:  'c-review__list__comment__item__top__review__stars',
+      reviewItemTopReviewNum:  'c-review__list__comment__item__top__review__num',
+      reviewItemTopInfo:  'c-review__list__comment__item__top__info',
+      reviewItemTopInfoDate:  'c-review__list__comment__item__top__info__date',
+      reviewItemTopInfoType:  'c-review__list__comment__item__top__info__type',
+      reviewItemTtl:  'c-review__list__comment__item__ttl',
+      reviewItemMessage:  'c-review__list__comment__item__message',
+      reviewItemMore:  'c-review__list__comment__item__more',
+      reviewItemPic:  'c-review__list__comment__item__pic',
+      reviewItemPicList:  'c-review__list__comment__item__pic__list',
+      reviewItemPicPrev:  'c-review__list__comment__item__pic__prev',
+      reviewItemPicNext:  'c-review__list__comment__item__pic__next',
+      reviewItemUser:  'c-review__list__comment__item__user',
+      reviewItemUserIc:  'c-review__list__comment__item__user__ic',
+      reviewItemUserInfo:  'c-review__list__comment__item__user__info',
+      reviewItemUserInfoName:  'c-review__list__comment__item__user__info__name',
+      reviewItemUserInfoDate:  'c-review__list__comment__item__user__info__date',
+      reviewItemReply:  'c-review__list__comment__item__reply',
+      reviewItemReplyTtl:  'c-review__list__comment__item__reply__ttl',
+      reviewItemReplyBox:  'c-review__list__comment__item__reply__box',
+      reviewItemReplyMessage:  'c-review__list__comment__item__reply__message',
+      reviewItemReplyMore:  'c-review__list__comment__item__reply__more',
 
     };
   }
@@ -300,7 +306,7 @@ export default class LinkTool {
   /**
    * Prepare input holder
    *
-   * @returns {object} inputHolder - make input holder
+   * @returns {Object} inputHolder - make input holder
    */
   makeInputHolder() {
     const inputHolder = this.make('div', this.CSS.inputHolder);
@@ -313,9 +319,9 @@ export default class LinkTool {
     this.nodes.input.dataset.placeholder = this.api.i18n.t('Link');
 
     if (!this.readOnly) {
-      // this.nodes.input.addEventListener('paste', (event) => {
+      //this.nodes.input.addEventListener('paste', (event) => {
       //  this.startFetching(event);
-      // });
+      //});
 
       this.nodes.input.addEventListener('keydown', (event) => {
         const [ENTER, A] = [13, 65];
@@ -346,7 +352,7 @@ export default class LinkTool {
   /**
    * Activates link data fetching by url
    *
-   * @param {object} event - window event
+   * @param {Object} event - window event
    */
   startFetching(event) {
     let url = this.nodes.input.textContent;
@@ -355,18 +361,17 @@ export default class LinkTool {
       url = (event.clipboardData || window.clipboardData).getData('text');
     }
 
-    const regex =
+    const regex = 
       new RegExp(/https?:\/\/((api(.dev)?(.stg)?.ntmg.com)|(localhost:3007))\/v1\/reviews\/([^/?&"]+)/);
-
     if (regex.test(url)) {
       this.isReview = true;
       this.head = {
-        accept: 'application/json, text/plain, */*',
+        'accept': 'application/json, text/plain, */*',
         'accept-language': this.config.language,
         'x-api-key': this.config.apikey,
-      };
+      }
     }
-    // const testUrl = 'http://localhost:3007/v1/reviews/0c3c6345-a007-49f7-b46c-32d9c22657a2';
+    //const testUrl = 'http://localhost:3007/v1/reviews/0c3c6345-a007-49f7-b46c-32d9c22657a2';
 
     this.removeErrorStyle();
     this.fetchLinkData(url);
@@ -383,9 +388,9 @@ export default class LinkTool {
   /**
    * Select LinkTool input content by CMD+A
    *
-   * @param {object} event - use keyboard event
+   * @param {Object} event - use keyboard event
    *
-   * @returns {void}
+   * @return {void}
    */
   selectLinkUrl(event) {
     event.preventDefault();
@@ -407,7 +412,7 @@ export default class LinkTool {
   /**
    * Prepare link preview holder
    *
-   * @returns {object} holder - return prepare render html element
+   * @returns {Object} holder - return prepare render html element
    */
   prepareLinkPreview() {
     // const holder = this.make('a', this.CSS.linkContent, {
@@ -433,7 +438,7 @@ export default class LinkTool {
   /**
    * Prepare review preview holder
    *
-   * @returns {object} holder - return prepare render review html element
+   * @returns {Object} holder - return prepare render review html element 
    */
   prepareReviewPreview() {
     const holder = this.make('div', this.CSS.reviewLinkContent);
@@ -445,7 +450,7 @@ export default class LinkTool {
     this.reviewNodes.itemTopReviewNum = this.make('p', this.CSS.reviewItemTopReviewNum);
     this.reviewNodes.itemTopReview.appendChild(this.reviewNodes.itemTopReviewStars);
     this.reviewNodes.itemTopReview.appendChild(this.reviewNodes.itemTopReviewNum);
-
+    
     this.reviewNodes.itemTopInfo = this.make('div', this.CSS.reviewItemTopInfo);
     this.reviewNodes.itemTopInfoDate = this.make('p', this.CSS.reviewItemTopInfoDate);
     this.reviewNodes.itemTopInfoType = this.make('p', this.CSS.reviewItemTopInfoType);
@@ -539,43 +544,41 @@ export default class LinkTool {
   showReviewPreview(meta) {
     this.nodes.container.appendChild(this.nodes.reviewContent);
 
-    if (meta.review.guest_language) {
-      this.moreText = this.config.language == 'JA-JP' ? 'もっと見る' : 'See More';
-      this.moreCloseText = this.config.language == 'JA-JP' ? '閉じる' : 'Show Less';
-      this.participationDateText = this.config.language == 'JA-JP' ? '参加日' : 'Participation Date';
-      this.writtenDateText = this.config.language == 'JA-JP' ? '投稿日' : 'Posted Date';
+    if (meta.guest_language) {
+      this.moreText = this.config.seeMoreText;
+      this.moreCloseText = this.config.showLessText;
+      this.participationDateText = this.config.participationDateText;
+      this.writtenDateText = this.config.writtenDateText;
     }
 
-    if (meta.review.rating) {
-      const rate = meta.review.rating.replace('REVIEW_RATING_', '');
-
+    if (meta.rating) {
+      const rate = meta.rating.replace('REVIEW_RATING_', '');
       for (let i = 0; i < 5; i++) {
         let img;
-
         if (i < rate) {
           img = this.make('img', null, { src: StarOn });
-          // img = this.make('img', null, { src: 'https://michi-s4.book.stg.ntmg.com/static/images/ic_star_on.svg' });
+          //img = this.make('img', null, { src: 'https://michi-s4.book.stg.ntmg.com/static/images/ic_star_on.svg' });
           this.reviewNodes.itemTopReviewStars.appendChild(img);
         } else {
           img = this.make('img', null, { src: StarOff });
-          // img = this.make('img', null, { src: 'https://michi-s4.book.stg.ntmg.com/static/images/ic_star_on.svg' });
+          //img = this.make('img', null, { src: 'https://michi-s4.book.stg.ntmg.com/static/images/ic_star_on.svg' });
           this.reviewNodes.itemTopReviewStars.appendChild(img);
         }
       }
       this.reviewNodes.itemTopReviewNum.textContent = rate;
     }
 
-    if (meta.review.participation_date_time_local) {
-      this.reviewNodes.itemTopInfoDate.textContent =
-        this.participationDateText + ':' + meta.review.participation_date_time_local.substring(0, 7);
+    if (meta.participation_date_time_local) {
+      this.reviewNodes.itemTopInfoDate.textContent = 
+        this.participationDateText + ':' + meta.participation_date_time_local.substring(0, 7);
     }
-    if (meta.review.attribution) {
-      this.reviewNodes.itemTopInfoType.textContent = this.config.attribution[`${this.config.language}`][`${meta.review.attribution}`];
+    if (meta.attribution) {
+      this.reviewNodes.itemTopInfoType.textContent = this.config.attribution[`${meta.attribution}`];
     }
-    if (meta.review.title) {
-      this.reviewNodes.itemTtl.textContent = meta.review.title;
+    if (meta.title) {
+      this.reviewNodes.itemTtl.textContent = meta.title;
     }
-    if (meta.review.body) {
+    if (meta.body) {
       this.reviewNodes.itemMore = this.make('div', this.CSS.reviewItemMore);
       this.reviewNodes.itemMoreButton = this.make('a', null);
       this.reviewNodes.itemMoreButton.textContent = this.moreText;
@@ -585,9 +588,9 @@ export default class LinkTool {
       this.reviewNodes.itemMore.appendChild(this.reviewNodes.itemMoreButton);
 
       this.reviewNodes.itemMessage = this.make('p', [this.CSS.reviewItemMessage, 'newline']);
-      this.reviewNodes.itemMessage.textContent = meta.review.body;
+      this.reviewNodes.itemMessage.textContent = meta.body;
     }
-    if (meta.review.media_items) {
+    if (meta.media_items) {
       this.reviewNodes.itemPic = this.make('div', this.CSS.reviewItemPic);
       this.reviewNodes.itemPicList = this.make('ul', this.CSS.reviewItemPicList);
       this.reviewNodes.itemPicPrev = this.make('a', this.CSS.reviewItemPicPrev);
@@ -596,29 +599,27 @@ export default class LinkTool {
       this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicPrev);
       this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicNext);
 
-      meta.review.media_items.map(media => {
+      meta.media_items.map(media => {
         const li = this.make('li');
-
         li.addEventListener('click', () => {
           this.showModal(media.url);
-        });
+        })
         li.appendChild(this.make('img', null, { src: media.url }));
         this.reviewNodes.itemPicList.appendChild(li);
         this.pic.push(li);
       });
     }
-    if (meta.review.guest_nickname) {
-      this.reviewNodes.itemUserIc.textContent = meta.review.guest_nickname.substring(0, 1);
-      this.reviewNodes.itemUserInfoName.textContent = meta.review.guest_nickname;
+    if (meta.guest_nickname) {
+      this.reviewNodes.itemUserIc.textContent = meta.guest_nickname.substring(0, 1);
+      this.reviewNodes.itemUserInfoName.textContent = meta.guest_nickname;
     }
-    if (meta.review.written_date_time_utc) {
-      const writtenDate = new Date(meta.review.written_date_time_utc);
-
-      this.reviewNodes.itemUserInfoDate.textContent =
-        this.writtenDateText + ':' + writtenDate.getUTCFullYear() +
-        '/' + writtenDate.getUTCMonth() + '/' + writtenDate.getUTCDate();
+    if (meta.written_date_time_utc) {
+      const writtenDate = new Date(meta.written_date_time_utc);
+      this.reviewNodes.itemUserInfoDate.textContent = 
+        this.writtenDateText + ':' + writtenDate.getUTCFullYear() 
+        + '/' + writtenDate.getUTCMonth() + '/' + writtenDate.getUTCDate();
     }
-    if (meta.review.supplier_comments) {
+    if (meta.supplier_comments) {
       this.reviewNodes.itemReply = this.make('div', this.CSS.reviewItemReply);
       this.reviewNodes.itemReplyTtl = this.make('p', this.CSS.reviewItemReplyTtl);
       this.reviewNodes.itemReplyBox = this.make('div', this.CSS.reviewItemReplyBox);
@@ -636,11 +637,8 @@ export default class LinkTool {
       this.reviewNodes.itemReply.appendChild(this.reviewNodes.itemReplyTtl);
       this.reviewNodes.itemReply.appendChild(this.reviewNodes.itemReplyBox);
 
-      this.reviewNodes.itemReplyMessage.textContent = meta.review.supplier_comments;
-      this.reviewNodes.itemReplyTtl.textContent =
-        this.config.language == 'JA-JP'
-          ? meta.translate_supplier_name + 'からの返信'
-          : 'Reply from ' + meta.translate_supplier_name;
+      this.reviewNodes.itemReplyMessage.textContent = meta.supplier_comments;
+      this.reviewNodes.itemReplyTtl.textContent = this.config.supplierName;
     }
 
     // add holder
@@ -651,31 +649,31 @@ export default class LinkTool {
       this.reviewNodes.itemMessage.classList.add('is-close');
       this.nodes.reviewContent.appendChild(this.reviewNodes.itemMore);
     }
-    if (meta.review.media_items) {
+    if (meta.media_items) {
       this.nodes.reviewContent.appendChild(this.reviewNodes.itemPic);
 
-      // slider parts
+      //slider parts
       this.itemWidth = this.pic[0].getBoundingClientRect().width + 16;
-      this.maxWidth = this.itemWidth * this.pic.length;
+      this.maxWidth = this.itemWidth * this.pic.length; 
       this.totalRight = -this.bound + this.reviewNodes.itemPicList.getBoundingClientRect().left + this.maxWidth + 16;
       this.visibleRight = this.reviewNodes.itemPicList.getBoundingClientRect().right - 16;
-      this.visibleWidth =
-        this.reviewNodes.itemPicList.getBoundingClientRect().right -
-        this.reviewNodes.itemPicList.getBoundingClientRect().left - 32;
+      this.visibleWidth = 
+        this.reviewNodes.itemPicList.getBoundingClientRect().right 
+        - this.reviewNodes.itemPicList.getBoundingClientRect().left - 32;
       this.remainWidth = this.totalRight - this.visibleRight;
-      this.reviewNodes.itemPicPrev.style = 'visibility: hidden;';
+      this.reviewNodes.itemPicPrev.style = 'visibility: hidden;'
       if (this.totalRight < this.visibleRight + 16) {
-        this.reviewNodes.itemPicNext.style = 'visibility: hidden;';
+        this.reviewNodes.itemPicNext.style = 'visibility: hidden;'
       }
       this.reviewNodes.itemPicPrev.addEventListener('click', () => {
-        this.slidePrev();
+        this.slidePrev()
       });
       this.reviewNodes.itemPicNext.addEventListener('click', () => {
-        this.slideNext();
+        this.slideNext()
       });
     }
     this.nodes.reviewContent.appendChild(this.reviewNodes.itemUser);
-    if (meta.review.supplier_comments) {
+    if (meta.supplier_comments) {
       this.nodes.reviewContent.appendChild(this.reviewNodes.itemReply);
       if (this.reviewNodes.itemReplyMessage.scrollHeight > 70) {
         this.reviewNodes.itemReplyBox.appendChild(this.reviewNodes.itemReplyMore);
@@ -685,7 +683,6 @@ export default class LinkTool {
 
     try {
       const getHost = (new URL(this.data.link)).hostname;
-
       if (!getHost) {
         console.error("can't get host name");
       }
@@ -701,7 +698,7 @@ export default class LinkTool {
    */
   slideNext() {
     if (this.totalRight <= this.visibleRight) {
-      return;
+      return
     }
 
     const delta = Math.min(this.remainWidth, this.visibleWidth);
@@ -709,19 +706,19 @@ export default class LinkTool {
     this.bound =
       delta == this.remainWidth
         ? this.bound + delta
-        : Math.floor((this.bound + delta) / this.itemWidth) * this.itemWidth;
+        : Math.floor((this.bound + delta) / this.itemWidth) * this.itemWidth
     this.totalRight = -this.bound + this.reviewNodes.itemPicList.getBoundingClientRect().left + this.maxWidth + 16;
     this.remainWidth = this.totalRight - this.visibleRight;
 
     if (this.totalRight <= this.visibleRight) {
-      this.reviewNodes.itemPicNext.style = 'visibility: hidden;';
+      this.reviewNodes.itemPicNext.style = 'visibility: hidden;'
     }
 
     if (this.bound > 0) {
       this.reviewNodes.itemPicPrev.removeAttribute('style');
     }
     this.pic.map(image => {
-      // image.style = 'transform: translateX(-30px);';
+      //image.style = 'transform: translateX(-30px);';
       image.style = 'transform: translateX(' + -this.bound + 'px);';
     });
   }
@@ -733,12 +730,11 @@ export default class LinkTool {
    */
   slidePrev() {
     if (this.bound === 0) {
-      return;
+      return
     }
 
     const delta = Math.min(this.bound, this.visibleWidth);
-
-    this.bound = Math.floor((this.bound - delta) / this.itemWidth) * this.itemWidth;
+    this.bound = Math.floor((this.bound - delta) / this.itemWidth) * this.itemWidth
     this.totalRight = -this.bound + this.reviewNodes.itemPicList.getBoundingClientRect().left + this.maxWidth + 16;
     this.remainWidth = this.totalRight - this.visibleRight;
 
@@ -750,7 +746,7 @@ export default class LinkTool {
       image.style = 'transform: translateX(' + -this.bound + 'px);';
     });
     if (this.bound === 0) {
-      this.reviewNodes.itemPicPrev.style = 'visibility: hidden;';
+      this.reviewNodes.itemPicPrev.style = 'visibility: hidden;'
     }
   }
 
@@ -764,12 +760,12 @@ export default class LinkTool {
       this.reviewNodes.itemMessage.classList.add('is-close');
       this.reviewNodes.itemMoreButton.textContent = this.moreText;
       this.isMore = false;
-
-      return;
+      return
     }
     this.reviewNodes.itemMessage.classList.remove('is-close');
     this.reviewNodes.itemMoreButton.textContent = this.moreCloseText;
     this.isMore = true;
+    return
   }
 
   /**
@@ -782,12 +778,12 @@ export default class LinkTool {
       this.reviewNodes.itemReplyMessage.classList.add('is-close');
       this.reviewNodes.itemReplyMoreButton.textContent = this.moreText;
       this.isReplyMore = false;
-
-      return;
+      return
     }
     this.reviewNodes.itemReplyMessage.classList.remove('is-close');
     this.reviewNodes.itemReplyMoreButton.textContent = this.moreCloseText;
     this.isReplyMore = true;
+    return
   }
 
   /**
@@ -801,14 +797,11 @@ export default class LinkTool {
     const modal = this.make('div', 'c-reviewPicture__modal');
     const modalContent = this.make('div', 'c-reviewPicture__modal__modal__content');
     const modalContentPick = this.make('div', 'c-reviewPicture__modal__modal__content__pic');
-    const img = this.make('img', null, { src: url });
-
+    const img = this.make('img', null, {src: url});
     modalContentPick.appendChild(img);
     const close = this.make('a', 'c-reviewPicture__modal__modal__content__close');
-
     close.addEventListener('click', () => {
       const tmp = document.getElementsByClassName('c-reviewPicture__modal');
-
       tmp[0].remove();
     });
     modalContent.appendChild(modalContentPick);
@@ -821,7 +814,7 @@ export default class LinkTool {
   /**
    * Show loading progressbar
    *
-   * @returns {void}
+   * @return {void}
    */
   showProgress() {
     this.nodes.progress.classList.add(this.CSS.progressLoading);
@@ -830,7 +823,7 @@ export default class LinkTool {
   /**
    * Hide loading progressbar
    *
-   * @returns {void}
+   * @return {void}
    */
   hideProgress() {
     return new Promise((resolve) => {
@@ -844,7 +837,7 @@ export default class LinkTool {
   /**
    * If data fetching failed, set input error style
    *
-   * @returns {void}
+   * @return {void}
    */
   applyErrorStyle() {
     this.nodes.inputHolder.classList.add(this.CSS.inputError);
@@ -864,10 +857,10 @@ export default class LinkTool {
       const { body, code } = await (ajax.get({
         url: this.isReview ? url : this.config.endpoint,
         headers: this.isReview ? this.head : null,
-        data: this.isReview ? null : { url: url },
+        data: this.isReview ? null : {url: url},
       }));
 
-      // this.onFetch(this.testBody, code);
+      //this.onFetch(this.testBody, code);
       this.onFetch(body, code);
     } catch (error) {
       this.fetchingFailed(this.api.i18n.t('Couldn\'t fetch the link data'));
@@ -935,7 +928,7 @@ export default class LinkTool {
    * @param {string} tagName - html element name
    * @param {string} classNames - class name
    * @param {object} attributes - attribute param
-   * @returns {object} - return html element
+   * @returns {Object} - return html element
    */
   make(tagName, classNames = null, attributes = {}) {
     const el = document.createElement(tagName);
