@@ -186,7 +186,7 @@ export default class LinkTool {
      * If Tool already has data, render link preview, otherwise insert input
      */
     if (Object.keys(this.data.meta).length) {
-      if (this.regex.text(this.data.link)) {
+      if (this.regex.test(this.data.link)) {
         this.nodes.container.appendChild(this.nodes.reviewContent);
         this.showReviewPreview(this.data.meta);
       } else {
