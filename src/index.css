@@ -328,7 +328,7 @@ text-decoration: none;color: inherit;}
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  margin-right: 8px;
+  margin-right: 8px !important;
   margin-top: 0;
   margin-bottom: 0;
 }
@@ -338,7 +338,7 @@ text-decoration: none;color: inherit;}
 .c-review__list__comment__item__user__info__name {
   font-size: 14px;
   line-height: 1;
-  margin-bottom: 4px;
+  margin-bottom: 4px !important;
   margin-top: 0;
 }
 .c-review__list__comment__item__user__info__date {
