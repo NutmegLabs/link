@@ -137,6 +137,8 @@ export default class LinkTool {
       itemReplyMoreButton: null,
     };
 
+    this.regex =
+      new RegExp(/https?:\/\/((api(.dev)?(.stg)?.ntmg.com)|(localhost:3007))\/v1\/reviews\/([^/?&"]+)/);
     this.head = {};
     this.pic = [];
     this.bound = 0;
@@ -184,7 +186,7 @@ export default class LinkTool {
      * If Tool already has data, render link preview, otherwise insert input
      */
     if (Object.keys(this.data.meta).length) {
-      if (this.isReview) {
+      if (this.regex.text(this.data.link)) {
         this.nodes.container.appendChild(this.nodes.reviewContent);
         this.showReviewPreview(this.data.meta);
       } else {
@@ -360,10 +362,7 @@ export default class LinkTool {
       url = (event.clipboardData || window.clipboardData).getData('text');
     }
 
-    const regex =
-      new RegExp(/https?:\/\/((api(.dev)?(.stg)?.ntmg.com)|(localhost:3007))\/v1\/reviews\/([^/?&"]+)/);
-
-    if (regex.test(url)) {
+    if (this.regex.test(url)) {
       this.isReview = true;
       this.head = {
         accept: 'application/json, text/plain, */*',
