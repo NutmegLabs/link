@@ -188,7 +188,7 @@ export default class LinkTool {
     if (Object.keys(this.data.meta).length) {
       if (this.regex.test(this.data.link)) {
         this.nodes.container.appendChild(this.nodes.reviewContent);
-        window.onload = this.showReviewPreview(this.data.meta);
+        this.showReviewPreview(this.data.meta);
       } else {
         this.nodes.container.appendChild(this.nodes.linkContent);
         this.showLinkPreview(this.data.meta);
