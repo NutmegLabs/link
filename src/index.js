@@ -541,109 +541,132 @@ export default class LinkTool {
    * @param {metaData} meta - review meta data
    */
   showReviewPreview(meta) {
-    this.nodes.container.appendChild(this.nodes.reviewContent);
+    new Promise((resolve) => {
+      this.nodes.container.appendChild(this.nodes.reviewContent);
 
-    if (meta.guest_language) {
-      this.moreText = this.config.seeMoreText;
-      this.moreCloseText = this.config.showLessText;
-      this.participationDateText = this.config.participationDateText;
-      this.writtenDateText = this.config.writtenDateText;
-    }
-
-    if (meta.rating) {
-      const rate = meta.rating.replace('REVIEW_RATING_', '');
-
-      for (let i = 0; i < 5; i++) {
-        let img;
-
-        if (i < rate) {
-          img = this.make('img', null, { src: StarOn });
-          // img = this.make('img', null, { src: 'https://michi-s4.book.stg.ntmg.com/static/images/ic_star_on.svg' });
-          this.reviewNodes.itemTopReviewStars.appendChild(img);
-        } else {
-          img = this.make('img', null, { src: StarOff });
-          // img = this.make('img', null, { src: 'https://michi-s4.book.stg.ntmg.com/static/images/ic_star_on.svg' });
-          this.reviewNodes.itemTopReviewStars.appendChild(img);
-        }
+      if (meta.guest_language) {
+        this.moreText = this.config.seeMoreText;
+        this.moreCloseText = this.config.showLessText;
+        this.participationDateText = this.config.participationDateText;
+        this.writtenDateText = this.config.writtenDateText;
       }
-      this.reviewNodes.itemTopReviewNum.textContent = rate;
-    }
 
-    if (meta.participation_date_time_local) {
-      this.reviewNodes.itemTopInfoDate.textContent =
-        this.participationDateText + ':' + meta.participation_date_time_local.substring(0, 7);
-    }
-    if (meta.attribution) {
-      this.reviewNodes.itemTopInfoType.textContent = this.config.attribution[`${meta.attribution}`];
-    }
-    if (meta.title) {
-      this.reviewNodes.itemTtl.textContent = meta.title;
-    }
-    if (meta.body) {
-      this.reviewNodes.itemMore = this.make('div', this.CSS.reviewItemMore);
-      this.reviewNodes.itemMoreButton = this.make('a', null);
-      this.reviewNodes.itemMoreButton.textContent = this.moreText;
-      this.reviewNodes.itemMoreButton.addEventListener('click', () => {
-        this.toggleMore();
-      });
-      this.reviewNodes.itemMore.appendChild(this.reviewNodes.itemMoreButton);
+      if (meta.rating) {
+        const rate = meta.rating.replace('REVIEW_RATING_', '');
 
-      this.reviewNodes.itemMessage = this.make('p', [this.CSS.reviewItemMessage, 'newline']);
-      this.reviewNodes.itemMessage.textContent = meta.body;
-    }
-    if (meta.media_items) {
-      this.reviewNodes.itemPic = this.make('div', this.CSS.reviewItemPic);
-      this.reviewNodes.itemPicList = this.make('ul', this.CSS.reviewItemPicList);
-      this.reviewNodes.itemPicPrev = this.make('a', this.CSS.reviewItemPicPrev);
-      this.reviewNodes.itemPicNext = this.make('a', this.CSS.reviewItemPicNext);
-      this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicList);
-      this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicPrev);
-      this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicNext);
+        for (let i = 0; i < 5; i++) {
+          let img;
 
-      meta.media_items.map(media => {
-        const li = this.make('li');
+          if (i < rate) {
+            img = this.make('img', null, { src: StarOn });
+            // img = this.make('img', null, { src: 'https://michi-s4.book.stg.ntmg.com/static/images/ic_star_on.svg' });
+            this.reviewNodes.itemTopReviewStars.appendChild(img);
+          } else {
+            img = this.make('img', null, { src: StarOff });
+            // img = this.make('img', null, { src: 'https://michi-s4.book.stg.ntmg.com/static/images/ic_star_on.svg' });
+            this.reviewNodes.itemTopReviewStars.appendChild(img);
+          }
+        }
+        this.reviewNodes.itemTopReviewNum.textContent = rate;
+      }
 
-        li.addEventListener('click', () => {
-          this.showModal(media.url);
+      if (meta.participation_date_time_local) {
+        this.reviewNodes.itemTopInfoDate.textContent =
+          this.participationDateText + ':' + meta.participation_date_time_local.substring(0, 7);
+      }
+      if (meta.attribution) {
+        this.reviewNodes.itemTopInfoType.textContent = this.config.attribution[`${meta.attribution}`];
+      }
+      if (meta.title) {
+        this.reviewNodes.itemTtl.textContent = meta.title;
+      }
+      if (meta.body) {
+        this.reviewNodes.itemMore = this.make('div', this.CSS.reviewItemMore);
+        this.reviewNodes.itemMoreButton = this.make('a', null);
+        this.reviewNodes.itemMoreButton.textContent = this.moreText;
+        this.reviewNodes.itemMoreButton.addEventListener('click', () => {
+          this.toggleMore();
         });
-        li.appendChild(this.make('img', null, { src: media.url }));
-        this.reviewNodes.itemPicList.appendChild(li);
-        this.pic.push(li);
-      });
+        this.reviewNodes.itemMore.appendChild(this.reviewNodes.itemMoreButton);
+
+        this.reviewNodes.itemMessage = this.make('p', [this.CSS.reviewItemMessage, 'newline']);
+        this.reviewNodes.itemMessage.textContent = meta.body;
+      }
+      if (meta.media_items) {
+        this.reviewNodes.itemPic = this.make('div', this.CSS.reviewItemPic);
+        this.reviewNodes.itemPicList = this.make('ul', this.CSS.reviewItemPicList);
+        this.reviewNodes.itemPicPrev = this.make('a', this.CSS.reviewItemPicPrev);
+        this.reviewNodes.itemPicNext = this.make('a', this.CSS.reviewItemPicNext);
+        this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicList);
+        this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicPrev);
+        this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicNext);
+
+        meta.media_items.map(media => {
+          const li = this.make('li');
+
+          li.addEventListener('click', () => {
+            this.showModal(media.url);
+          });
+          li.appendChild(this.make('img', null, { src: media.url }));
+          this.reviewNodes.itemPicList.appendChild(li);
+          this.pic.push(li);
+        });
+      }
+      if (meta.guest_nickname) {
+        this.reviewNodes.itemUserIc.textContent = meta.guest_nickname.substring(0, 1);
+        this.reviewNodes.itemUserInfoName.textContent = meta.guest_nickname;
+      }
+      if (meta.written_date_time_utc) {
+        const writtenDate = new Date(meta.written_date_time_utc);
+
+        this.reviewNodes.itemUserInfoDate.textContent =
+          this.writtenDateText + ':' + writtenDate.getUTCFullYear() +
+          '/' + writtenDate.getUTCMonth() + '/' + writtenDate.getUTCDate();
+      }
+      if (meta.supplier_comments) {
+        this.reviewNodes.itemReply = this.make('div', this.CSS.reviewItemReply);
+        this.reviewNodes.itemReplyTtl = this.make('p', this.CSS.reviewItemReplyTtl);
+        this.reviewNodes.itemReplyBox = this.make('div', this.CSS.reviewItemReplyBox);
+        this.reviewNodes.itemReplyMessage = this.make('p', [this.CSS.reviewItemReplyMessage, 'newline']);
+
+        this.reviewNodes.itemReplyMore = this.make('p', this.CSS.reviewItemReplyMore);
+        this.reviewNodes.itemReplyMoreButton = this.make('a', null);
+        this.reviewNodes.itemReplyMoreButton.textContent = this.moreText;
+        this.reviewNodes.itemReplyMoreButton.addEventListener('click', () => {
+          this.toggleReplyMore();
+        });
+        this.reviewNodes.itemReplyMore.appendChild(this.reviewNodes.itemReplyMoreButton);
+
+        this.reviewNodes.itemReplyBox.appendChild(this.reviewNodes.itemReplyMessage);
+        this.reviewNodes.itemReply.appendChild(this.reviewNodes.itemReplyTtl);
+        this.reviewNodes.itemReply.appendChild(this.reviewNodes.itemReplyBox);
+
+        this.reviewNodes.itemReplyMessage.textContent = meta.supplier_comments;
+        this.reviewNodes.itemReplyTtl.textContent = this.config.supplierName;
+      }
+      setTimeout(resolve, 500);
+    }).then(() => {
+      this.addReviewData(meta);
+    });
+
+    try {
+      const getHost = (new URL(this.data.link)).hostname;
+
+      if (!getHost) {
+        console.error("can't get host name");
+      }
+    } catch (e) {
+      this.nodes.linkText.textContent = this.data.link;
     }
-    if (meta.guest_nickname) {
-      this.reviewNodes.itemUserIc.textContent = meta.guest_nickname.substring(0, 1);
-      this.reviewNodes.itemUserInfoName.textContent = meta.guest_nickname;
-    }
-    if (meta.written_date_time_utc) {
-      const writtenDate = new Date(meta.written_date_time_utc);
+  }
 
-      this.reviewNodes.itemUserInfoDate.textContent =
-        this.writtenDateText + ':' + writtenDate.getUTCFullYear() +
-        '/' + writtenDate.getUTCMonth() + '/' + writtenDate.getUTCDate();
-    }
-    if (meta.supplier_comments) {
-      this.reviewNodes.itemReply = this.make('div', this.CSS.reviewItemReply);
-      this.reviewNodes.itemReplyTtl = this.make('p', this.CSS.reviewItemReplyTtl);
-      this.reviewNodes.itemReplyBox = this.make('div', this.CSS.reviewItemReplyBox);
-      this.reviewNodes.itemReplyMessage = this.make('p', [this.CSS.reviewItemReplyMessage, 'newline']);
-
-      this.reviewNodes.itemReplyMore = this.make('p', this.CSS.reviewItemReplyMore);
-      this.reviewNodes.itemReplyMoreButton = this.make('a', null);
-      this.reviewNodes.itemReplyMoreButton.textContent = this.moreText;
-      this.reviewNodes.itemReplyMoreButton.addEventListener('click', () => {
-        this.toggleReplyMore();
-      });
-      this.reviewNodes.itemReplyMore.appendChild(this.reviewNodes.itemReplyMoreButton);
-
-      this.reviewNodes.itemReplyBox.appendChild(this.reviewNodes.itemReplyMessage);
-      this.reviewNodes.itemReply.appendChild(this.reviewNodes.itemReplyTtl);
-      this.reviewNodes.itemReply.appendChild(this.reviewNodes.itemReplyBox);
-
-      this.reviewNodes.itemReplyMessage.textContent = meta.supplier_comments;
-      this.reviewNodes.itemReplyTtl.textContent = this.config.supplierName;
-    }
-
+  /**
+   * Add holder
+   *
+   * @private
+   * @param {object} meta - meta Data
+   */
+  addReviewData(meta) {
     // add holder
     this.nodes.reviewContent.appendChild(this.reviewNodes.itemTop);
     this.nodes.reviewContent.appendChild(this.reviewNodes.itemTtl);
@@ -682,16 +705,6 @@ export default class LinkTool {
         this.reviewNodes.itemReplyBox.appendChild(this.reviewNodes.itemReplyMore);
         this.reviewNodes.itemReplyMessage.classList.add('is-close');
       }
-    }
-
-    try {
-      const getHost = (new URL(this.data.link)).hostname;
-
-      if (!getHost) {
-        console.error("can't get host name");
-      }
-    } catch (e) {
-      this.nodes.linkText.textContent = this.data.link;
     }
   }
 
