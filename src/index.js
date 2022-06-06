@@ -592,7 +592,7 @@ export default class LinkTool {
         this.reviewNodes.itemMessage = this.make('p', [this.CSS.reviewItemMessage, 'newline']);
         this.reviewNodes.itemMessage.textContent = meta.body;
       }
-      if (meta.media_items) {
+      if (meta.media_items.length !== 0) {
         this.reviewNodes.itemPic = this.make('div', this.CSS.reviewItemPic);
         this.reviewNodes.itemPicList = this.make('ul', this.CSS.reviewItemPicList);
         this.reviewNodes.itemPicPrev = this.make('a', this.CSS.reviewItemPicPrev);
@@ -675,7 +675,7 @@ export default class LinkTool {
       this.reviewNodes.itemMessage.classList.add('is-close');
       this.nodes.reviewContent.appendChild(this.reviewNodes.itemMore);
     }
-    if (meta.media_items) {
+    if (meta.media_items.length !== 0) {
       this.nodes.reviewContent.appendChild(this.reviewNodes.itemPic);
 
       // slider parts
