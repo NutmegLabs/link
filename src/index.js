@@ -779,6 +779,7 @@ export default class LinkTool {
       this.reviewNodes.itemMessage.classList.add('is-close');
       this.nodes.reviewContent.appendChild(this.reviewNodes.itemMore);
     }
+    console.log(meta.media_items.length);
     if (meta.media_items.length !== 0) {
       this.nodes.reviewContent.appendChild(this.reviewNodes.itemPic);
 
