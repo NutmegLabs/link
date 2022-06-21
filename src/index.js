@@ -171,6 +171,7 @@ export default class LinkTool {
    * @returns {object} this.nodes.wrapper - render element wrapper
    */
   render() {
+    console.log('test 1');
     this.nodes.wrapper = this.make('div', this.CSS.baseClass);
     this.nodes.container = this.make('div', this.CSS.container);
 
