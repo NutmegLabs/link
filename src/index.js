@@ -709,61 +709,75 @@ export default class LinkTool {
       this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicPrev);
       this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicNext);
 
-      ((imgs) => {
-        const imgCollector = () => {
-          let count = 0;
+      // ((imgs) => {
+      //  const imgCollector = () => {
+      //    let count = 0;
 
-          console.log(count);
+      //    console.log(count);
 
-          return () => {
-            count++;
-            if (imgs.length === count) {
-              console.log('complete');
-            }
-          };
+      //    return () => {
+      //      count++;
+      //      if (imgs.length === count) {
+      //        console.log('complete');
+      //      }
+      //    };
+      //  };
+
+      //  const image = () => {
+      //    console.log('start');
+      //    imgs.map(media => {
+      //      const li = this.make('li');
+
+      //      li.addEventListener('click', () => {
+      //        this.showModal(media.url);
+      //      });
+
+      //      const img = this.make('img', null, { src: media.url });
+
+      //      img.onload = () => {
+      //        console.log('collect ago');
+      //        imgCollector();
+      //        console.log('collect lator');
+      //      };
+      //      li.appendChild(img);
+      //      this.reviewNodes.itemPicList.appendChild(li);
+      //      this.pic.push(li);
+      //    });
+      //  };
+
+      //  return image;
+      // })(meta.media_items);
+
+      ((m) => {
+        const t1 = (z) => {
+          console.log('z:' + z);
         };
-
-        const image = () => {
-          console.log('start');
-          imgs.map(media => {
-            const li = this.make('li');
-
-            li.addEventListener('click', () => {
-              this.showModal(media.url);
-            });
-
-            const img = this.make('img', null, { src: media.url });
-
-            img.onload = () => {
-              console.log('collect ago');
-              imgCollector();
-              console.log('collect lator');
-            };
-            li.appendChild(img);
-            this.reviewNodes.itemPicList.appendChild(li);
-            this.pic.push(li);
+        const t2 = () => {
+          m.map((s) => {
+            console.log(s);
+            t1(s);
           });
         };
 
-        return image;
-      })(meta.media_items);
+        return t2;
+      })([0, 1, 2]);
 
-      // meta.media_items.map(media => {
-      //  const li = this.make('li');
+      meta.media_items.map(media => {
+        const li = this.make('li');
 
-      //  li.addEventListener('click', () => {
-      //    this.showModal(media.url);
-      //  });
+        li.addEventListener('click', () => {
+          this.showModal(media.url);
+        });
 
-      //  const img = this.make('img', null, { src: media.url });
+        const img = this.make('img', null, { src: media.url });
 
-      //  img.onload = () => {
-      //    console.log('img');
-      //  };
-      //  li.appendChild(img);
-      //  this.reviewNodes.itemPicList.appendChild(li);
-      //  this.pic.push(li);
-      // });
+        img.onload = () => {
+          console.log('img');
+        };
+        li.appendChild(img);
+        this.reviewNodes.itemPicList.appendChild(li);
+        this.pic.push(li);
+      });
     }
     if (meta.guest_nickname) {
       this.reviewNodes.itemUserIc.textContent = meta.guest_nickname.substring(0, 1);
