@@ -171,7 +171,7 @@ export default class LinkTool {
    * @returns {object} this.nodes.wrapper - render element wrapper
    */
   render() {
-    console.log('test 4');
+    console.log('test 5');
     this.nodes.wrapper = this.make('div', this.CSS.baseClass);
     this.nodes.container = this.make('div', this.CSS.container);
 
@@ -719,7 +719,7 @@ export default class LinkTool {
         const img = this.make('img', null, { src: media.url });
 
         img.onload = () => {
-          li.appendChild();
+          li.appendChild(img);
           this.reviewNodes.itemPicList.appendChild(li);
           this.pic.push(li);
         };
