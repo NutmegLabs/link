@@ -748,11 +748,11 @@ export default class LinkTool {
       //  return image;
       // })(meta.media_items);
 
-      ((m) => {
+      (() => {
         const t1 = (z) => {
           console.log('z:' + z);
         };
-        const t2 = () => {
+        const t2 = (m) => {
           console.log(m);
           m.map((s) => {
             console.log(s);
@@ -762,13 +762,6 @@ export default class LinkTool {
 
         return t2;
       })([0, 1, 2]);
-      (() => {
-        const s = [0, 1, 2];
-
-        s.map(x => {
-          console.log(x);
-        });
-      })();
 
       meta.media_items.map(media => {
         const li = this.make('li');
