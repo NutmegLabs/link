@@ -713,6 +713,8 @@ export default class LinkTool {
         const imgCollector = () => {
           let count = 0;
 
+          console.log(count);
+
           return () => {
             count++;
             if (imgs.length === count) {
@@ -722,6 +724,7 @@ export default class LinkTool {
         };
 
         const image = () => {
+          console.log('start');
           imgs.map(media => {
             const li = this.make('li');
 
@@ -732,7 +735,9 @@ export default class LinkTool {
             const img = this.make('img', null, { src: media.url });
 
             img.onload = () => {
+              console.log('collect ago');
               imgCollector();
+              console.log('collect lator');
             };
             li.appendChild(img);
             this.reviewNodes.itemPicList.appendChild(li);
