@@ -762,6 +762,7 @@ export default class LinkTool {
 
         return t2;
       })([0, 1, 2]);
+      (() => console.log('sssss'))();
 
       meta.media_items.map(media => {
         const li = this.make('li');
