@@ -752,15 +752,15 @@ export default class LinkTool {
         const t1 = (z) => {
           console.log('z:' + z);
         };
-        const t2 = () => {
-          console.log(m);
-          m.map((s) => {
+        const t2 = (u) => {
+          console.log(u);
+          u.map((s) => {
             console.log(s);
             t1(s);
           });
         };
 
-        t2();
+        t2(m);
       };
 
       r([0, 1, 2]);
