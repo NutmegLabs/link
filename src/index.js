@@ -604,12 +604,13 @@ export default class LinkTool {
 
       this.imageLoad = (imageItems) => {
         return new Promise((resolve) => {
-          let count = 0;
           const imgCollector = (imgs) => {
-            console.log(count);
+            let count = 0;
 
             return () => {
               count++;
+              console.log(imgs.length);
+              console.log(count);
               if (imgs.length === count) {
                 resolve(console.log('done'));
               }
