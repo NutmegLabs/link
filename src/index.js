@@ -607,14 +607,14 @@ export default class LinkTool {
           const imgCollector = (imgs) => {
             let count = 0;
 
-            return () => {
+            return (() => {
               count++;
               console.log(imgs.length);
               console.log(count);
               if (imgs.length === count) {
                 resolve(console.log('done'));
               }
-            };
+            })();
           };
 
           const image = (imgs) => {
