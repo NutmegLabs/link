@@ -710,44 +710,46 @@ export default class LinkTool {
       this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicPrev);
       this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicNext);
 
-      this.imageLoad = new Promise((resolve) => {
-        const imgCollector = (imgs) => {
-          let count = 0;
+      this.imageLoad = (imageItems) => {
+        return new Promise((resolve) => {
+          const imgCollector = (imgs) => {
+            let count = 0;
 
-          console.log(count);
+            console.log(count);
 
-          return () => {
-            count++;
-            if (imgs.length === count) {
-              resolve();
-            }
-          };
-        };
-
-        const image = (imgs) => {
-          console.log('start');
-          imgs.map(media => {
-            const li = this.make('li');
-
-            li.addEventListener('click', () => {
-              this.showModal(media.url);
-            });
-
-            const img = this.make('img', null, { src: media.url });
-
-            img.onload = () => {
-              console.log('collect ago');
-              imgCollector(imgs);
-              console.log('collect lator');
+            return () => {
+              count++;
+              if (imgs.length === count) {
+                resolve();
+              }
             };
-            li.appendChild(img);
-            this.reviewNodes.itemPicList.appendChild(li);
-            this.pic.push(li);
-          });
-        };
+          };
 
-        image(meta.media_items);
-      });
+          const image = (imgs) => {
+            console.log('start');
+            imgs.map(media => {
+              const li = this.make('li');
+
+              li.addEventListener('click', () => {
+                this.showModal(media.url);
+              });
+
+              const img = this.make('img', null, { src: media.url });
+
+              img.onload = () => {
+                console.log('collect ago');
+                imgCollector(imgs);
+                console.log('collect lator');
+              };
+              li.appendChild(img);
+              this.reviewNodes.itemPicList.appendChild(li);
+              this.pic.push(li);
+            });
+          };
+
+          image(imageItems);
+        });
+      };
 
       // meta.media_items.map(media => {
       //  const li = this.make('li');
@@ -802,7 +804,7 @@ export default class LinkTool {
     if (this.imageLoad == null) {
       this.addReviewData(meta);
     } else {
-      this.imageLoad().then(this.addReviewData(meta));
+      this.imageLoad(meta.media_items).then(this.addReviewData(meta));
     }
 
     try {
