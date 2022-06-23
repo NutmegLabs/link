@@ -606,14 +606,20 @@ export default class LinkTool {
         return new Promise((resolve) => {
           let count = 0;
           const imgCollector = (imgs) => {
-            return (() => {
-              count++;
-              console.log(imgs.length);
-              console.log(count);
-              if (imgs.length === count) {
-                resolve(console.log('done'));
-              }
-            })();
+            // return (() => {
+            //  count++;
+            //  console.log(imgs.length);
+            //  console.log(count);
+            //  if (imgs.length === count) {
+            //    resolve(console.log('done'));
+            //  }
+            // })();
+            count++;
+            console.log(imgs.length);
+            console.log(count);
+            if (imgs.length === count) {
+              resolve(console.log('done'));
+            }
           };
 
           const image = (imgs) => {
@@ -695,8 +701,10 @@ export default class LinkTool {
     if (this.imageLoad == null) {
       this.addReviewData(meta);
     } else {
-      console.log(this.imageLoad);
-      this.imageLoad(meta.media_items).then(this.addReviewData(meta));
+      const xxx = this.imageLoad(meta.media_items);
+
+      console.log(xxx);
+      xxx.then(this.addReviewData(meta));
     }
 
     try {
