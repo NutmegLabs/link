@@ -799,9 +799,11 @@ export default class LinkTool {
       this.reviewNodes.itemReplyTtl.textContent = this.config.supplierName;
     }
 
-    // window.addEventListener('load', this.addReviewData(meta));
-    console.log(this.imageLoad);
-    this.imageLoad().then(this.addReviewData(meta));
+    if (this.imageLoad == null) {
+      this.addReviewData(meta);
+    } else {
+      this.imageLoad().then(this.addReviewData(meta));
+    }
 
     try {
       const getHost = (new URL(this.data.link)).hostname;
