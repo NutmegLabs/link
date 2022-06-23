@@ -137,6 +137,7 @@ export default class LinkTool {
       itemReplyMoreButton: null,
     };
 
+    this.imageLoad = false;
     this.regex =
       new RegExp(/https?:\/\/((api(.dev)?(.stg)?.ntmg.com)|(localhost:3007))\/v1\/reviews\/([^/?&"]+)/);
     this.head = {};
@@ -718,6 +719,9 @@ export default class LinkTool {
           return () => {
             count++;
             if (imgs.length === count) {
+              this.imageLoad = new Promise((resolve) => {
+                resolve();
+              });
               console.log('complete');
             }
           };
@@ -749,22 +753,6 @@ export default class LinkTool {
       };
 
       a(meta.media_items);
-
-      // const r = (m) => {
-      //  const t1 = (z) => {
-      //    console.log('z:' + z);
-      //  };
-      //  const t2 = (u) => {
-      //    console.log(u);
-      //    u.map((s) => {
-      //      console.log(s);
-      //      t1(s);
-      //    });
-      //  };
-
-      //  t2(m);
-      // };
-      // r([0, 1, 2]);
 
       // meta.media_items.map(media => {
       //  const li = this.make('li');
@@ -816,7 +804,8 @@ export default class LinkTool {
       this.reviewNodes.itemReplyTtl.textContent = this.config.supplierName;
     }
 
-    window.addEventListener('load', this.addReviewData(meta));
+    // window.addEventListener('load', this.addReviewData(meta));
+    this.imageLoad.then(this.addReviewData(meta));
 
     try {
       const getHost = (new URL(this.data.link)).hostname;
