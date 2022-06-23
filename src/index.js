@@ -171,7 +171,7 @@ export default class LinkTool {
    * @returns {object} this.nodes.wrapper - render element wrapper
    */
   render() {
-    console.log('test 1');
+    console.log('test 2');
     this.nodes.wrapper = this.make('div', this.CSS.baseClass);
     this.nodes.container = this.make('div', this.CSS.container);
 
@@ -748,11 +748,11 @@ export default class LinkTool {
       //  return image;
       // })(meta.media_items);
 
-      ((m) => {
+      (() => {
         const t1 = (z) => {
           console.log('z:' + z);
         };
-        const t2 = () => {
+        const t2 = (m) => {
           console.log(m);
           m.map((s) => {
             console.log(s);
@@ -760,7 +760,7 @@ export default class LinkTool {
           });
         };
 
-        return t2;
+        return t2();
       })([0, 1, 2]);
 
       meta.media_items.map(media => {
