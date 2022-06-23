@@ -689,9 +689,6 @@ export default class LinkTool {
     if (this.imageLoad == null) {
       this.addReviewData(meta);
     } else {
-      const xxx = this.imageLoad(meta.media_items);
-
-      console.log(xxx);
       this.imageLoad(meta.media_items).then(() => this.addReviewData(meta));
     }
 
