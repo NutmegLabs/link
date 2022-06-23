@@ -709,61 +709,62 @@ export default class LinkTool {
       this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicPrev);
       this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicNext);
 
-      // (() => {
-      //  const imgCollector = (imgs) => {
-      //    let count = 0;
+      const a = (imgmap) => {
+        const imgCollector = (imgs) => {
+          let count = 0;
 
-      //    console.log(count);
+          console.log(count);
 
-      //    return () => {
-      //      count++;
-      //      if (imgs.length === count) {
-      //        console.log('complete');
-      //      }
-      //    };
-      //  };
-
-      //  const image = (imgs) => {
-      //    console.log('start');
-      //    imgs.map(media => {
-      //      const li = this.make('li');
-
-      //      li.addEventListener('click', () => {
-      //        this.showModal(media.url);
-      //      });
-
-      //      const img = this.make('img', null, { src: media.url });
-
-      //      img.onload = () => {
-      //        console.log('collect ago');
-      //        imgCollector(imgs);
-      //        console.log('collect lator');
-      //      };
-      //      li.appendChild(img);
-      //      this.reviewNodes.itemPicList.appendChild(li);
-      //      this.pic.push(li);
-      //    });
-      //  };
-
-      //  return image;
-      // })(meta.media_items);
-
-      const r = (m) => {
-        const t1 = (z) => {
-          console.log('z:' + z);
+          return () => {
+            count++;
+            if (imgs.length === count) {
+              console.log('complete');
+            }
+          };
         };
-        const t2 = (u) => {
-          console.log(u);
-          u.map((s) => {
-            console.log(s);
-            t1(s);
+
+        const image = (imgs) => {
+          console.log('start');
+          imgs.map(media => {
+            const li = this.make('li');
+
+            li.addEventListener('click', () => {
+              this.showModal(media.url);
+            });
+
+            const img = this.make('img', null, { src: media.url });
+
+            img.onload = () => {
+              console.log('collect ago');
+              imgCollector(imgs);
+              console.log('collect lator');
+            };
+            li.appendChild(img);
+            this.reviewNodes.itemPicList.appendChild(li);
+            this.pic.push(li);
           });
         };
 
-        t2(m);
+        image(imgmap);
       };
 
-      r([0, 1, 2]);
+      a(meta.media_items);
+
+      // const r = (m) => {
+      //  const t1 = (z) => {
+      //    console.log('z:' + z);
+      //  };
+      //  const t2 = (u) => {
+      //    console.log(u);
+      //    u.map((s) => {
+      //      console.log(s);
+      //      t1(s);
+      //    });
+      //  };
+
+      //  t2(m);
+      // };
+      // r([0, 1, 2]);
 
       // meta.media_items.map(media => {
       //  const li = this.make('li');
