@@ -607,8 +607,6 @@ export default class LinkTool {
           let count = 0;
           const imgCollector = (imgs) => {
             count++;
-            console.log(imgs.length);
-            console.log(count);
             if (imgs.length === count) {
               resolve(console.log('done'));
             }
@@ -626,9 +624,7 @@ export default class LinkTool {
               const img = this.make('img', null, { src: media.url });
 
               img.onload = () => {
-                console.log('collect ago');
                 imgCollector(imgs);
-                console.log('collect lator');
               };
               li.appendChild(img);
               this.reviewNodes.itemPicList.appendChild(li);
@@ -696,7 +692,7 @@ export default class LinkTool {
       const xxx = this.imageLoad(meta.media_items);
 
       console.log(xxx);
-      xxx().then(this.addReviewData(meta));
+      this.imageLoad(meta.media_items).then(() => this.addReviewData(meta));
     }
 
     try {
