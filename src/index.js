@@ -171,7 +171,7 @@ export default class LinkTool {
    * @returns {object} this.nodes.wrapper - render element wrapper
    */
   render() {
-    console.log('test 4');
+    console.log('test 5');
     this.nodes.wrapper = this.make('div', this.CSS.baseClass);
     this.nodes.container = this.make('div', this.CSS.container);
 
@@ -709,59 +709,61 @@ export default class LinkTool {
       this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicPrev);
       this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicNext);
 
-      (() => {
-        const imgCollector = (imgs) => {
-          let count = 0;
-
-          console.log(count);
-
-          return () => {
-            count++;
-            if (imgs.length === count) {
-              console.log('complete');
-            }
-          };
-        };
-
-        const image = (imgs) => {
-          console.log('start');
-          imgs.map(media => {
-            const li = this.make('li');
-
-            li.addEventListener('click', () => {
-              this.showModal(media.url);
-            });
-
-            const img = this.make('img', null, { src: media.url });
-
-            img.onload = () => {
-              console.log('collect ago');
-              imgCollector(imgs);
-              console.log('collect lator');
-            };
-            li.appendChild(img);
-            this.reviewNodes.itemPicList.appendChild(li);
-            this.pic.push(li);
-          });
-        };
-
-        return image;
-      })(meta.media_items);
-
       // (() => {
-      //  const t1 = (z) => {
-      //    console.log('z:' + z);
+      //  const imgCollector = (imgs) => {
+      //    let count = 0;
+
+      //    console.log(count);
+
+      //    return () => {
+      //      count++;
+      //      if (imgs.length === count) {
+      //        console.log('complete');
+      //      }
+      //    };
       //  };
-      //  const t2 = (m) => {
-      //    console.log(m);
-      //    m.map((s) => {
-      //      console.log(s);
-      //      t1(s);
+
+      //  const image = (imgs) => {
+      //    console.log('start');
+      //    imgs.map(media => {
+      //      const li = this.make('li');
+
+      //      li.addEventListener('click', () => {
+      //        this.showModal(media.url);
+      //      });
+
+      //      const img = this.make('img', null, { src: media.url });
+
+      //      img.onload = () => {
+      //        console.log('collect ago');
+      //        imgCollector(imgs);
+      //        console.log('collect lator');
+      //      };
+      //      li.appendChild(img);
+      //      this.reviewNodes.itemPicList.appendChild(li);
+      //      this.pic.push(li);
       //    });
       //  };
 
-      //  return t2;
-      // })([0, 1, 2]);
+      //  return image;
+      // })(meta.media_items);
+
+      const r = () => {
+        const t1 = (z) => {
+          console.log('z:' + z);
+        };
+        const t2 = (m) => {
+          console.log(m);
+          m.map((s) => {
+            console.log(s);
+            t1(s);
+          });
+        };
+
+        return t2;
+      };
+
+      r([0, 1, 2]);
 
       // meta.media_items.map(media => {
       //  const li = this.make('li');
