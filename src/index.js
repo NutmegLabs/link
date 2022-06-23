@@ -604,9 +604,8 @@ export default class LinkTool {
 
       this.imageLoad = (imageItems) => {
         return new Promise((resolve) => {
+          let count = 0;
           const imgCollector = (imgs) => {
-            let count = 0;
-
             return (() => {
               count++;
               console.log(imgs.length);
@@ -696,6 +695,7 @@ export default class LinkTool {
     if (this.imageLoad == null) {
       this.addReviewData(meta);
     } else {
+      console.log(this.imageLoad);
       this.imageLoad(meta.media_items).then(this.addReviewData(meta));
     }
 
