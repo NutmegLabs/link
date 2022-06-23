@@ -172,7 +172,6 @@ export default class LinkTool {
    * @returns {object} this.nodes.wrapper - render element wrapper
    */
   render() {
-    console.log('test 6');
     this.nodes.wrapper = this.make('div', this.CSS.baseClass);
     this.nodes.container = this.make('div', this.CSS.container);
 
@@ -608,12 +607,11 @@ export default class LinkTool {
           const imgCollector = (imgs) => {
             count++;
             if (imgs.length === count) {
-              resolve(console.log('done'));
+              resolve();
             }
           };
 
           const image = (imgs) => {
-            console.log('start');
             imgs.map(media => {
               const li = this.make('li');
 
@@ -732,10 +730,6 @@ export default class LinkTool {
         this.reviewNodes.itemPicList.getBoundingClientRect().left - 32;
       this.remainWidth = this.totalRight - this.visibleRight;
       this.reviewNodes.itemPicPrev.style = 'visibility: hidden;';
-      console.log(this.pic);
-      console.log(this.itemWidth);
-      console.log(this.totalRight);
-      console.log(this.visibleRight + 16);
       if (this.totalRight < this.visibleRight + 16) {
         this.reviewNodes.itemPicNext.style = 'visibility: hidden;';
       }
