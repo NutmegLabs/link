@@ -171,7 +171,7 @@ export default class LinkTool {
    * @returns {object} this.nodes.wrapper - render element wrapper
    */
   render() {
-    console.log('test 3');
+    console.log('test 4');
     this.nodes.wrapper = this.make('div', this.CSS.baseClass);
     this.nodes.container = this.make('div', this.CSS.container);
 
@@ -709,76 +709,76 @@ export default class LinkTool {
       this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicPrev);
       this.reviewNodes.itemPic.appendChild(this.reviewNodes.itemPicNext);
 
-      // ((imgs) => {
-      //  const imgCollector = () => {
-      //    let count = 0;
+      (() => {
+        const imgCollector = (imgs) => {
+          let count = 0;
 
-      //    console.log(count);
+          console.log(count);
 
-      //    return () => {
-      //      count++;
-      //      if (imgs.length === count) {
-      //        console.log('complete');
-      //      }
-      //    };
-      //  };
-
-      //  const image = () => {
-      //    console.log('start');
-      //    imgs.map(media => {
-      //      const li = this.make('li');
-
-      //      li.addEventListener('click', () => {
-      //        this.showModal(media.url);
-      //      });
-
-      //      const img = this.make('img', null, { src: media.url });
-
-      //      img.onload = () => {
-      //        console.log('collect ago');
-      //        imgCollector();
-      //        console.log('collect lator');
-      //      };
-      //      li.appendChild(img);
-      //      this.reviewNodes.itemPicList.appendChild(li);
-      //      this.pic.push(li);
-      //    });
-      //  };
-
-      //  return image;
-      // })(meta.media_items);
-
-      ((m) => {
-        const t1 = (z) => {
-          console.log('z:' + z);
+          return () => {
+            count++;
+            if (imgs.length === count) {
+              console.log('complete');
+            }
+          };
         };
-        const t2 = () => {
-          console.log(m);
-          m.map((s) => {
-            console.log(s);
-            t1(s);
+
+        const image = (imgs) => {
+          console.log('start');
+          imgs.map(media => {
+            const li = this.make('li');
+
+            li.addEventListener('click', () => {
+              this.showModal(media.url);
+            });
+
+            const img = this.make('img', null, { src: media.url });
+
+            img.onload = () => {
+              console.log('collect ago');
+              imgCollector(imgs);
+              console.log('collect lator');
+            };
+            li.appendChild(img);
+            this.reviewNodes.itemPicList.appendChild(li);
+            this.pic.push(li);
           });
         };
 
-        return t2;
-      })([0, 1, 2]);
+        return image;
+      })(meta.media_items);
 
-      meta.media_items.map(media => {
-        const li = this.make('li');
+      // (() => {
+      //  const t1 = (z) => {
+      //    console.log('z:' + z);
+      //  };
+      //  const t2 = (m) => {
+      //    console.log(m);
+      //    m.map((s) => {
+      //      console.log(s);
+      //      t1(s);
+      //    });
+      //  };
 
-        li.addEventListener('click', () => {
-          this.showModal(media.url);
-        });
+      //  return t2;
+      // })([0, 1, 2]);
 
-        const img = this.make('img', null, { src: media.url });
+      // meta.media_items.map(media => {
+      //  const li = this.make('li');
 
-        img.onload = () => {
-          console.log('img');
-        };
-        li.appendChild(img);
-        this.reviewNodes.itemPicList.appendChild(li);
-        this.pic.push(li);
-      });
+      //  li.addEventListener('click', () => {
+      //    this.showModal(media.url);
+      //  });
+
+      //  const img = this.make('img', null, { src: media.url });
+
+      //  img.onload = () => {
+      //    console.log('img');
+      //  };
+      //  li.appendChild(img);
+      //  this.reviewNodes.itemPicList.appendChild(li);
+      //  this.pic.push(li);
+      // });
     }
     if (meta.guest_nickname) {
       this.reviewNodes.itemUserIc.textContent = meta.guest_nickname.substring(0, 1);
