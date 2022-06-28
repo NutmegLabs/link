@@ -79,9 +79,9 @@ export default class LinkTool {
       endpoint: config.endpoint || '',
       baseUrl: config.baseUrl || '',
       urlLinkWord: config.urlLinkWord || '',
+      language: config.language || '',
       headers: config.headers || {},
       apikey: config.apikey || '',
-      language: config.language || '',
       attribution: config.attribution || {},
       supplierName: config.supplierName || '',
       seeMoreText: config.seeMoreText || '',
@@ -595,7 +595,7 @@ export default class LinkTool {
         style: 'text-decoration: none',
       });
 
-      link.setAttribute('href', this.config.baseUrl + '/products/' + meta.product_id);
+      link.setAttribute('href', this.config.baseUrl + '/products/' + meta.product_id + '?lng='.this.config.language);
       link.textContent = this.config.urlLinkWord;
       this.reviewNodes.itemTtl.appendChild(title);
       this.reviewNodes.itemTtl.appendChild(link);
