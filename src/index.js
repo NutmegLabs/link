@@ -77,6 +77,8 @@ export default class LinkTool {
      */
     this.config = {
       endpoint: config.endpoint || '',
+      baseUrl: config.baseUrl || '',
+      urlLinkWord: config.urlLinkWord || '',
       headers: config.headers || {},
       apikey: config.apikey || '',
       language: config.language || '',
@@ -284,7 +286,11 @@ export default class LinkTool {
       reviewItemTopInfo: 'c-review__list__comment__item__top__info',
       reviewItemTopInfoDate: 'c-review__list__comment__item__top__info__date',
       reviewItemTopInfoType: 'c-review__list__comment__item__top__info__type',
-      reviewItemTtl: 'c-review__list__comment__item__ttl',
+      //reviewItemTtl: 'c-review__list__comment__item__ttl',
+      reviewItemTtlStack: 'c-review__list__comment__item__ttl__stack',
+      reviewItemTtlTitle: 'c-review__list__comment__item__ttl__title',
+      reviewItemTtlLink: 'c-review__list__comment__item__ttl__link',
+      reviewItemTtlBorder: 'c-review__list__comment__item__ttl__border',
       reviewItemMessage: 'c-review__list__comment__item__message',
       reviewItemMore: 'c-review__list__comment__item__more',
       reviewItemPic: 'c-review__list__comment__item__pic',
@@ -459,7 +465,8 @@ export default class LinkTool {
     this.reviewNodes.itemTop.appendChild(this.reviewNodes.itemTopReview);
     this.reviewNodes.itemTop.appendChild(this.reviewNodes.itemTopInfo);
 
-    this.reviewNodes.itemTtl = this.make('p', this.CSS.reviewItemTtl);
+    //this.reviewNodes.itemTtl = this.make('p', this.CSS.reviewItemTtl);
+    this.reviewNodes.itemTtl = this.make('div', this.CSS.reviewItemTtlStack);
 
     this.reviewNodes.itemUser = this.make('div', this.CSS.reviewItemUser);
     this.reviewNodes.itemUserIc = this.make('p', this.CSS.reviewItemUserIc);
@@ -578,7 +585,14 @@ export default class LinkTool {
       this.reviewNodes.itemTopInfoType.textContent = this.config.attribution[`${meta.attribution}`];
     }
     if (meta.title) {
-      this.reviewNodes.itemTtl.textContent = meta.title;
+      //this.reviewNodes.itemTtl.textContent = meta.title;
+      const title = this.make('p', this.CSS.reviewItemTtlTitle);
+      title.textContent = meta.title;
+      const link = this.make('a', this.CSS.reviewItemTtlLink, { target: '_blank', rel: 'nofollow noindex noreferrer', style: 'text-decoration: none' });
+      link.setAttribute('href', this.config.baseUrl + '/products/' + meta.product_id);
+      link.textContent = this.config.urlLinkWord;
+      this.reviewNodes.itemTtl.appendChild(title);
+      this.reviewNodes.itemTtl.appendChild(link);
     }
     if (meta.body) {
       this.reviewNodes.itemMore = this.make('div', this.CSS.reviewItemMore);
@@ -711,6 +725,7 @@ export default class LinkTool {
     // add holder
     this.nodes.reviewContent.appendChild(this.reviewNodes.itemTop);
     this.nodes.reviewContent.appendChild(this.reviewNodes.itemTtl);
+    this.nodes.reviewContent.appendChild(this.make('p', this.CSS.reviewItemTtlBorder));
     this.nodes.reviewContent.appendChild(this.reviewNodes.itemMessage);
     if (this.reviewNodes.itemMessage.scrollHeight > 70) {
       this.reviewNodes.itemMessage.classList.add('is-close');
