@@ -595,7 +595,7 @@ export default class LinkTool {
         style: 'text-decoration: none',
       });
 
-      link.setAttribute('href', this.config.baseUrl + '/products/' + meta.product_id + '?lng='.this.config.language);
+      link.setAttribute('href', this.config.baseUrl + '/products/' + meta.product_id + '?lng=' + this.config.language);
       link.textContent = this.config.urlLinkWord;
       this.reviewNodes.itemTtl.appendChild(title);
       this.reviewNodes.itemTtl.appendChild(link);
