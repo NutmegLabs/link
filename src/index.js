@@ -528,7 +528,7 @@ export default class LinkTool {
         const regex = new RegExp(/円/);
         let price = meta.lowest_price_gross;
 
-        if (this.config.langage !== 'ja-JP') {
+        if (this.config.language !== 'ja-JP') {
           if (regex.test(price)) {
             price = 'JPY ' + price.replace('円', '');
           }
