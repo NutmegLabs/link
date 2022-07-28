@@ -327,9 +327,9 @@ export default class LinkTool {
     this.nodes.input.dataset.placeholder = this.api.i18n.t('Link');
 
     if (!this.readOnly) {
-      // this.nodes.input.addEventListener('paste', (event) => {
-      //  this.startFetching(event);
-      // });
+      this.nodes.input.addEventListener('paste', (event) => {
+        this.startFetching(event);
+      });
 
       this.nodes.input.addEventListener('keydown', (event) => {
         const [ENTER, A] = [13, 65];
@@ -376,6 +376,9 @@ export default class LinkTool {
         'accept-language': this.config.language,
         'x-api-key': this.config.apikey,
       };
+    } else {
+      this.isReview = false;
+      this.head = {};
     }
     // const testUrl = 'http://localhost:3007/v1/reviews/0c3c6345-a007-49f7-b46c-32d9c22657a2';
 
