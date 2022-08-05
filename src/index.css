@@ -86,7 +86,7 @@
   width: 100%;
   border-radius: 4px;
   background: #f9f9f9;
-  /* background: var(--theme-content-section-backgroundcolor); */
+  background: var(--theme-background-color);
   overflow: hidden;
 }
 .c-itemCard__item a {
@@ -143,6 +143,8 @@
   font-size: 20px;
   font-weight: 700;
   margin-left: auto;
+  color: #0094CC;
+  color: var(--theme-primary-color);
 }
 .c-itemCard__item__arrow {
   width: 12px;
@@ -156,6 +158,8 @@
   border-top-style: solid;
   border-right-style: solid;
   transform: rotate(45deg);
+  border-color: #0094CC;
+  border-color: var(--theme-primary-color);
 }
 
 .c-review__list {
@@ -169,7 +173,7 @@
   background: #f9f9f9;
   border-radius: 4px;
   padding: 16px;
-  background: var(--theme-content-section-backgroundcolor);
+  background: var(--theme-background-color);
 }
 .c-review__list__comment__item__top {
   width: 100%;
@@ -219,6 +223,8 @@
   margin-left: 16px;
   margin-top: 0;
   margin-bottom: 0;
+  color: var(--theme-primary-color);
+  border: 1px solid var(--theme-primary-color);
 }
 .c-review__list__comment__item__ttl {
   font-size: 20px;
@@ -246,6 +252,7 @@
   font-size: 11px;
   font-weight: bold;
   color: #0094CC;
+  color: var(--theme-primary-color);
   text-decoration: none;
   padding-top: 17px;
   margin-bottom: 0;
@@ -282,6 +289,7 @@
   font-weight: bold;
   text-align: right;
   color: #0094CC;
+  color: var(--theme-primary-color);;
   text-decoration: underline;
   margin-left: auto;
 }
@@ -336,6 +344,8 @@
   height: 8px;
   border-left: 2px solid #0094CC;
   border-bottom: 2px solid #0094CC;
+  border-left: 2px solid var(--theme-primary-color);;
+  border-bottom: 2px solid var(--theme-primary-color);;
   transform: rotate(45deg);
   position: absolute;
   top: calc(50% - 5px);
@@ -357,6 +367,7 @@
   font-size: 14px;
   font-weight: bold;
   color: #0094CC;
+  color: var(--theme-primary-color);;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -391,6 +402,7 @@
 .c-review__list__comment__item__reply__box {
   width: 100%;
   background: #fff;
+  background: var(--theme-content-section-background-color);
   border-radius: 4px;
   padding: 16px;
 }
