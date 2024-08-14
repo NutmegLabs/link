@@ -1,6 +1,6 @@
 {
   "name": "@editorjs/link",
-  "version": "2.4.12",
+  "version": "2.4.13",
   "keywords": [
     "codex editor",
     "tool",
@@ -16,7 +16,7 @@
   },
   "main": "./dist/bundle.js",
   "scripts": {
-    "build": "webpack --mode production",
+    "build": "NODE_OPTIONS='--openssl-legacy-provider' webpack --mode production",
     "build:dev": "webpack --mode development --watch"
   },
   "author": "CodeX <team@codex.so>",
