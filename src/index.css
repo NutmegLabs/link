@@ -139,7 +139,7 @@
 }
 .c-itemCard__item__body__info__week {
   max-width: 240px;
-  word-break: break-word;
+  word-break: normal;
   font-size: 14px;
 }
 .c-itemCard__item__body__info__price {
