@@ -88,6 +88,7 @@ export default class LinkTool {
       showLessText: config.showLessText || '',
       participationDateText: config.participationDateText || '',
       writtenDateText: config.writtenDateText || '',
+      shouldHideOperatingDayOfWeek: config.shouldHideOperatingDayOfWeek || false,
     };
 
     this.nodes = {
@@ -518,10 +519,10 @@ export default class LinkTool {
     this.nodes.anchor.setAttribute('href', this.data.link);
 
     // TODO if week and price
-    if (meta.lowest_price_gross || meta.operating_days_of_week) {
+    if (meta.lowest_price_gross || (meta.operating_days_of_week && !this.config.shouldHideOperatingDayOfWeek)) {
       this.nodes.bodyInfo = this.make('div', this.CSS.bodyInfo);
 
-      if (meta.operating_days_of_week) {
+      if (meta.operating_days_of_week && !this.config.shouldHideOperatingDayOfWeek) {
         this.nodes.infoWeek = this.make('p', this.CSS.infoWeek);
         this.nodes.infoWeek.textContent = meta.operating_days_of_week;
         this.nodes.bodyInfo.appendChild(this.nodes.infoWeek);
